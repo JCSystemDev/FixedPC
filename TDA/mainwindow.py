@@ -127,27 +127,27 @@ class MainWindow(QMainWindow):
 
             self.create_tab(1, ["Consultar Repuesto"],
                             "Repuesto", "img/repuesto.png", "Gestión de Repuestos",
-                            [formwindow.abrir_formagregar])
+                            [formwindow.ConsultarRepuesto.create_and_exec])
 
             self.create_tab(3, ["Agregar Servicio", "Modificar Servicio", "Consultar Servicio"],
                             "Servicio", "img/servicio.png", "Gestión de Servicios",
-                            [formwindow.abrir_formagregar, dao.modificar, dao.consultar])
+                            [formwindow.AgregarServicio.create_and_exec, formwindow.ModificarServicio.create_and_exec, formwindow.ConsultarServicio.create_and_exec])
 
 
         elif role == "inventario":
             self.create_tab(3, ["Agregar Repuesto", "Modificar Repuesto", "Consultar Repuesto"],
                             "Repuesto", "img/repuesto.png", "Gestión de Repuestos",
-                            [formwindow.abrir_formagregar, dao.modificar, dao.consultar])
+                            [formwindow.AgregarRepuesto.create_and_exec, formwindow.ModificarRepuesto.create_and_exec, formwindow.ConsultarRepuesto.create_and_exec])
 
         elif role == "recepcionista":
 
             self.create_tab(3, ["Agregar Ticket",  "Modificar Ticket", "Consultar Ticket"],
                             "Ticket", "img/ticket.png", "Gestión de Tickets",
-                            [formwindow.abrir_formagregar, dao.modificar, dao.consultar])
+                            [formwindow.AgregarTicket.create_and_exec, formwindow.ModificarTicket.create_and_exec, formwindow.ConsultarTicket.create_and_exec])
 
             self.create_tab(3, ["Agregar Cliente", "Modificar Cliente", "Consultar Cliente"],
                             "Cliente", "img/cliente.png", "Gestión de Clientes",
-                            [formwindow.abrir_formagregar, dao.modificar, dao.consultar])
+                            [formwindow.AgregarCliente.create_and_exec, formwindow.ModificarCliente.create_and_exec, formwindow.ConsultarCliente.create_and_exec])
 
     def closeEvent(self, event):
         reply = QMessageBox.question(
