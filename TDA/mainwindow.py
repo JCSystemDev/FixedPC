@@ -90,7 +90,7 @@ class MainWindow(QMainWindow):
             self.create_tab(4, ["Agregar Usuario", "Borrar Usuario", "Modificar Usuario", "Consultar Usuario"],
                             "Usuario", "img/usuario.png", "Gestión de Usuarios",
                             [formwindow.AgregarCuenta.create_and_exec, formwindow.BorrarCuenta.create_and_exec,
-                             formwindow.ModificarCuenta.create_and_exec, formwindow.AgregarTicket.create_and_exec])
+                             formwindow.ModificarCuenta.create_and_exec, formwindow.ConsultarCuenta.create_and_exec])
 
             self.create_tab(4, ["Agregar Cliente", "Borrar Cliente", "Modificar Cliente", "Consultar Cliente"],
                             "Cliente", "img/cliente.png", "Gestión de Clientes",
@@ -100,27 +100,27 @@ class MainWindow(QMainWindow):
             self.create_tab(4, ["Agregar Repuesto", "Borrar Repuesto", "Modificar Repuesto", "Consultar Repuesto"],
                             "Repuesto", "img/repuesto.png", "Gestión de Repuestos",
                             [formwindow.AgregarRepuesto.create_and_exec, formwindow.BorrarRepuesto.create_and_exec,
-                             formwindow.ModificarRepuesto.create_and_exec, formwindow.AgregarTicket.create_and_exec])
+                             formwindow.ModificarRepuesto.create_and_exec, formwindow.ConsultarRepuesto.create_and_exec])
 
             self.create_tab(4, ["Agregar Servicio", "Borrar Servicio", "Modificar Servicio", "Consultar Servicio"],
                             "Servicio", "img/servicio.png", "Gestión de Servicios",
                             [formwindow.AgregarServicio.create_and_exec, formwindow.BorrarServicio.create_and_exec,
-                             formwindow.ModificarServicio.create_and_exec, formwindow.AgregarTicket.create_and_exec])
+                             formwindow.ModificarServicio.create_and_exec, formwindow.ConsultarServicio.create_and_exec])
 
             self.create_tab(4, ["Agregar Empleado", "Borrar Empleado", "Modificar Empleado", "Consultar Empleado"],
                             "Empleado", "img/empleado.png", "Gestión de Empleados",
                             [formwindow.AgregarEmpleado.create_and_exec, formwindow.BorrarEmpleado.create_and_exec,
-                             formwindow.ModificarEmpleado.create_and_exec, formwindow.AgregarTicket.create_and_exec])
+                             formwindow.ModificarEmpleado.create_and_exec, formwindow.ConsultarEmpleado.create_and_exec])
 
         elif role == "administrativo":
 
-            self.create_tab(4, ["Agregar Empleado", "Modificar Empleado", "Consultar Empleado"],
+            self.create_tab(3, ["Agregar Empleado", "Modificar Empleado", "Consultar Empleado"],
                             "Empleado", "img/empleado.png", "Gestión de Empleados",
-                            [formwindow.abrir_formagregar, dao.modificar, dao.consultar])
+                            [formwindow.AgregarEmpleado.create_and_exec, formwindow.ModificarEmpleado.create_and_exec, formwindow.ConsultarEmpleado.create_and_exec])
 
-            self.create_tab(4, ["Agregar Cliente", "Modificar Cliente", "Consultar Cliente"],
+            self.create_tab(3, ["Agregar Cliente", "Modificar Cliente", "Consultar Cliente"],
                             "Cliente", "img/cliente.png", "Gestión de Clientes",
-                            [formwindow.abrir_formagregar, dao.modificar, dao.consultar])
+                            [formwindow.AgregarCliente.create_and_exec, formwindow.ModificarCliente.create_and_exec, formwindow.ConsultarCliente.create_and_exec])
 
 
         elif role == "tecnico":
