@@ -1,0 +1,31 @@
+## Sistema de gestión Fixed PC
+
+### Tipos de usuario y Roles
+* Administrador del sistema
+* Personal Administrativo
+* Personal de recepción
+* Personal técnico
+* Personal de bodega
+
+### Sub-sistemas
+* Usuarios
+* Tickets 
+* Trabajadores
+* Inventario
+* Servicios
+* Finanzas
+
+### Base de datos
+* Tipo de base de datos
+* Modelo de base de datos
+
+### Plataformas utilizadas 
+* Python
+* MySQL
+* Qt
+
+### Equipo de desarrollo
+* Diego Cornejo
+* Danilo Garrido
+* Juan Carlos Gallardo
+* Angelo Marchant
