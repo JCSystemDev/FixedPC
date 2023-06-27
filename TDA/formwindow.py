@@ -228,7 +228,6 @@ class ModificarFormularioWindow(FormularioWindow):
         self.codigo_modificar.clear()
 
 
-
 class AgregarCliente(AgregarFormularioWindow):
     def __init__(self):
         super().__init__()
@@ -607,60 +606,36 @@ class ConsultarFormularioWindow(FormularioWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Fixed PC - Consultar")
-        self.setFixedSize(300, 400)
-        self.set_title_text("Consultar Elemento")
         self.image_path = "img/buscar.png"
         self.update_image()
-
-
-class ConsultarFinanza(ConsultarFormularioWindow):
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle("Fixed PC - Consultar")
-        self.set_title_text("Consultar Finanza")
-
-        # Create a QVBoxLayout for filter options and search field
-        filter_layout = QVBoxLayout()
-
         # Create filter options
-        self.filter_label = QLabel("Campo de búsqueda:")
+        self.filter_layout = QVBoxLayout()
+        self.filter_label = QLabel("Filtro de búsqueda:")
         self.filter_combo = QComboBox()
-        self.filter_combo.addItems(["Código", "Tipo", "Fecha"])
-        filter_layout.addWidget(self.filter_label)
-        filter_layout.addWidget(self.filter_combo)
-
         # Create search field
-        self.search_label = QLabel("Valor a buscar:")
+        self.search_label = QLabel("Buscar:")
         self.search_field = QLineEdit()
-        filter_layout.addWidget(self.search_label)
-        filter_layout.addWidget(self.search_field)
+        self.headers = []
+        self.columns = []
+        self.mapping_columns = {}
+        self.columns_table = 0
 
-        # Create "Consultar" button
-        consultar_button = QPushButton("Consultar")
-        consultar_button.clicked.connect(self.consultar_finanza)
-        filter_layout.addWidget(consultar_button)
-
-        # Add filter layout to the main layout
-        self.layout.addLayout(filter_layout)
-
-    def consultar_finanza(self):
+    def read_row(self):
         filtro = self.filter_combo.currentText()
         valor_busqueda = self.search_field.text()
+        columns = self.columns
+        column_names = ', '.join(columns)
 
         if valor_busqueda:
             # Map the filter selection to the corresponding column name
-            column_mapping = {
-                "Código": "cod_doc",
-                "Tipo": "type",
-                "Fecha": "date_doc"
-            }
-            columna = column_mapping.get(filtro, "")  # Get the corresponding column name, or empty string if not found
+            columna = self.mapping_columns.get(filtro, "")
+            # Get the corresponding column name, or empty string if not found
 
             if columna:
                 # Query the "finanza" table based on the selected filter and search value
                 fdao = dao.DAO()
-                query_buscar = f"SELECT cod_doc, type, valor_neto, valor_total, date_doc " \
-                               f"FROM finanza WHERE {columna} = '{valor_busqueda}'"
+                query_buscar = f"SELECT {column_names} " \
+                               f"FROM {self.table_name} WHERE {columna} = '{valor_busqueda}'"
                 resultado = fdao.mostrar(query_buscar)
                 fdao.cerrar_conexion()
 
@@ -674,8 +649,8 @@ class ConsultarFinanza(ConsultarFormularioWindow):
                     layout.setContentsMargins(20, 20, 20, 20)
 
                     table_widget = QTableWidget()
-                    table_widget.setColumnCount(5)
-                    table_widget.setHorizontalHeaderLabels(["Código", "Tipo", "Valor neto", "Valor total", "Fecha"])
+                    table_widget.setColumnCount(self.columns_table)
+                    table_widget.setHorizontalHeaderLabels(self.headers)
                     table_widget.setEditTriggers(QTableWidget.NoEditTriggers)
                     table_widget.setRowCount(len(resultado))
 
@@ -695,4 +670,63 @@ class ConsultarFinanza(ConsultarFormularioWindow):
             QMessageBox.warning(self, "Error", "Ingresa un valor de búsqueda válido.")
 
         self.search_field.clear()
+
+
+class ConsultarTicket(ConsultarFormularioWindow):
+    def __init__(self):
+        super().__init__()
+        self.setFixedSize(300, 400)
+        self.set_title_text("Consultar Ticket")
+        self.table_name = "ticket"
+        self.headers = ["Código", "Estado", "Código de cliente", "Código de Técnico asignado", "Código de facturación"]
+        self.columns = ["cod_ticket", "state_ticket", "cod_customer", "cod_emp", "cod_fact"]
+        self.columns_table = 5
+        self.filter_combo.addItems(["Código", "Estado", "Técnico"])
+        self.mapping_columns = {
+            "Código": "cod_ticket",
+            "Estado": "state_ticket",
+            "Técnico": "cod_emp"}
+        self.consultar_button = QPushButton("Consultar")
+        self.consultar_button.clicked.connect(self.read_row)
+        self.layout.addLayout(self.filter_layout)
+        self.filter_layout.addWidget(self.filter_label)
+        self.filter_layout.addWidget(self.filter_combo)
+        self.filter_layout.addWidget(self.search_label)
+        self.filter_layout.addWidget(self.search_field)
+        self.filter_layout.addWidget(self.consultar_button)
+
+
+    def create_and_exec(self):
+        form = ConsultarTicket()
+        form.exec_()
+
+class ConsultarCliente(ConsultarFormularioWindow):
+    def __init__(self):
+        super().__init__()
+        self.setFixedSize(300, 400)
+        self.set_title_text("Consultar Cliente")
+        self.table_name = "cliente"
+        self.headers = ["Código", "Nombre", "Apellido", "Rut", "Dirección", "Email", "Teléfono"]
+        self.columns = ["cod_customer", "name_customer", "lastname_customer", "rut_customer", "address_customer",
+                        "email_customer", "phone_customer"]
+        self.columns_table = 7
+        self.filter_combo.addItems(["Código", "Rut", "Email"])
+        self.mapping_columns = {
+            "Código": "cod_customer",
+            "Rut": "rut_customer",
+            "Email": "email_customer"}
+        self.consultar_button = QPushButton("Consultar")
+        self.consultar_button.clicked.connect(self.read_row)
+        self.layout.addLayout(self.filter_layout)
+        self.filter_layout.addWidget(self.filter_label)
+        self.filter_layout.addWidget(self.filter_combo)
+        self.filter_layout.addWidget(self.search_label)
+        self.filter_layout.addWidget(self.search_field)
+        self.filter_layout.addWidget(self.consultar_button)
+
+
+    def create_and_exec(self):
+        form = ConsultarCliente()
+        form.exec_()
+
 

@@ -85,7 +85,7 @@ class MainWindow(QMainWindow):
             self.create_tab(4, ["Agregar Ticket", "Borrar Ticket", "Modificar Ticket", "Consultar Ticket"],
                             "Ticket", "img/ticket.png", "Gestión de Tickets",
                             [formwindow.AgregarTicket.create_and_exec, formwindow.BorrarTicket.create_and_exec,
-                             formwindow.ModificarTicket.create_and_exec, formwindow.AgregarTicket.create_and_exec])
+                             formwindow.ModificarTicket.create_and_exec, formwindow.ConsultarTicket.create_and_exec])
 
             self.create_tab(4, ["Agregar Usuario", "Borrar Usuario", "Modificar Usuario", "Consultar Usuario"],
                             "Usuario", "img/usuario.png", "Gestión de Usuarios",
@@ -95,7 +95,7 @@ class MainWindow(QMainWindow):
             self.create_tab(4, ["Agregar Cliente", "Borrar Cliente", "Modificar Cliente", "Consultar Cliente"],
                             "Cliente", "img/cliente.png", "Gestión de Clientes",
                             [formwindow.AgregarCliente.create_and_exec, formwindow.BorrarCliente.create_and_exec,
-                             formwindow.ModificarCliente.create_and_exec, formwindow.AgregarTicket.create_and_exec])
+                             formwindow.ModificarCliente.create_and_exec, formwindow.ConsultarCliente.create_and_exec])
 
             self.create_tab(4, ["Agregar Repuesto", "Borrar Repuesto", "Modificar Repuesto", "Consultar Repuesto"],
                             "Repuesto", "img/repuesto.png", "Gestión de Repuestos",
