@@ -730,3 +730,113 @@ class ConsultarCliente(ConsultarFormularioWindow):
         form.exec_()
 
 
+class ConsultarCuenta(ConsultarFormularioWindow):
+    def __init__(self):
+        super().__init__()
+        self.setFixedSize(300, 400)
+        self.set_title_text("Consultar Cuenta")
+        self.table_name = "cuenta"
+        self.headers = ["Nombre de Usuario", "Contraseña", "Rol", "Código de empleado"]
+        self.columns = ["cod_user", "clave_user", "rol", "cod_emp"]
+        self.columns_table = 4
+        self.filter_combo.addItems(["Usuario", "Rol", "Empleado"])
+        self.mapping_columns = {
+            "Usuario": "cod_user",
+            "Rol": "rol",
+            "Código de empleado": "cod_emp"}
+        self.consultar_button = QPushButton("Consultar")
+        self.consultar_button.clicked.connect(self.read_row)
+        self.layout.addLayout(self.filter_layout)
+        self.filter_layout.addWidget(self.filter_label)
+        self.filter_layout.addWidget(self.filter_combo)
+        self.filter_layout.addWidget(self.search_label)
+        self.filter_layout.addWidget(self.search_field)
+        self.filter_layout.addWidget(self.consultar_button)
+
+     
+    def create_and_exec(self):
+        form = ConsultarCuenta()
+        form.exec_()
+
+
+class ConsultarEmpleado(ConsultarFormularioWindow):
+    def __init__(self):
+        super().__init__()
+        self.setFixedSize(300, 400)
+        self.set_title_text("Consultar Empleado")
+        self.table_name = "empleado"
+        self.headers = ["Código", "Nombre", "Apellido", "Cargo", "Rut", "Fecha de contratación", "Fecha de retiro"]
+        self.columns = ["cod_emp", "name_emp", "lastname_emp", "job_title", "rut_emp", "hire_date", "dep_date"]
+        self.columns_table = 7
+        self.filter_combo.addItems(["Código", "Rut", "Cargo"])
+        self.mapping_columns = {
+            "Código": "cod_emp",
+            "Rut": "rut_emp",
+            "Cargo": "job_title"}
+        self.consultar_button = QPushButton("Consultar")
+        self.consultar_button.clicked.connect(self.read_row)
+        self.layout.addLayout(self.filter_layout)
+        self.filter_layout.addWidget(self.filter_label)
+        self.filter_layout.addWidget(self.filter_combo)
+        self.filter_layout.addWidget(self.search_label)
+        self.filter_layout.addWidget(self.search_field)
+        self.filter_layout.addWidget(self.consultar_button)
+
+
+    def create_and_exec(self):
+        form = ConsultarEmpleado()
+        form.exec_()
+
+
+class ConsultarRepuesto(ConsultarFormularioWindow):
+    def __init__(self):
+        super().__init__()
+        self.setFixedSize(300, 400)
+        self.set_title_text("Consultar Respuesto")
+        self.table_name = "repuesto"
+        self.headers = ["Código", "Nombre", "Descripción", "Precio", "Stock"]
+        self.columns = ["cod_rep", "name_rep", "desc_rep", "price_rep", "stock"]
+        self.columns_table = 5
+        self.filter_combo.addItems(["Código"])
+        self.mapping_columns = {
+            "Código": "cod_rep"}
+        self.consultar_button = QPushButton("Consultar")
+        self.consultar_button.clicked.connect(self.read_row)
+        self.layout.addLayout(self.filter_layout)
+        self.filter_layout.addWidget(self.filter_label)
+        self.filter_layout.addWidget(self.filter_combo)
+        self.filter_layout.addWidget(self.search_label)
+        self.filter_layout.addWidget(self.search_field)
+        self.filter_layout.addWidget(self.consultar_button)
+
+
+    def create_and_exec(self):
+        form = ConsultarRepuesto()
+        form.exec_()
+
+
+class ConsultarServicio(ConsultarFormularioWindow):
+    def __init__(self):
+        super().__init__()
+        self.setFixedSize(300, 400)
+        self.set_title_text("Consultar Servicio")
+        self.table_name = "servicio"
+        self.headers = ["Código", "Nombre", "Descripción", "Precio"]
+        self.columns = ["cod_serv", "name_serv", "desc_serv", "price_serv"]
+        self.columns_table = 4
+        self.filter_combo.addItems(["Código"])
+        self.mapping_columns = {
+            "Código": "cod_serv"}
+        self.consultar_button = QPushButton("Consultar")
+        self.consultar_button.clicked.connect(self.read_row)
+        self.layout.addLayout(self.filter_layout)
+        self.filter_layout.addWidget(self.filter_label)
+        self.filter_layout.addWidget(self.filter_combo)
+        self.filter_layout.addWidget(self.search_label)
+        self.filter_layout.addWidget(self.search_field)
+        self.filter_layout.addWidget(self.consultar_button)
+
+
+    def create_and_exec(self):
+        form = ConsultarServicio()
+        form.exec_()
