@@ -197,29 +197,38 @@ class ModificarFormularioWindow(FormularioWindow):
 
     def update_row(self):
         codigo_modificar = self.codigo_modificar.text()
+        columns = self.columns
+        column_names = ', '.join(columns)
 
         if codigo_modificar:
-            confirmacion = QMessageBox.question(self, "Confirmación", "¿Deseas actualizar los datos del elemento?",
-                                                QMessageBox.Yes | QMessageBox.No)
-            if confirmacion == QMessageBox.Yes:
-                fdao = dao.DAO()
-                column_values = {}
-                new_values = []
-                for header, column in zip(self.headers[1:], self.columns[1:]):
-                    new_value, ok = QInputDialog.getText(self, "Actualizar",
-                                                         f"Ingrese nuevo valor para '{header}':",
-                                                         QLineEdit.Normal, "")
-                    if ok:
-                        column_values[column] = new_value
-                        new_values.append(new_value)
+            fdao = dao.DAO()
+            query_buscar = f"SELECT {column_names} FROM {self.table_name} WHERE {columns[0]} = '{codigo_modificar}'"
+            resultado = fdao.buscar(query_buscar)
+            fdao.cerrar_conexion()
 
-                if column_values:  # Verificar si se han ingresado datos para actualizar
-                    update_columns = ", ".join(f"{column} = %s" for column in column_values.keys())
-                    query_actualizar = f"UPDATE {self.table_name} SET {update_columns} WHERE {self.columns[0]} = %s"
-                    new_values.append(codigo_modificar)
+            if resultado:
+                # Mostrar mensaje de confirmación
+                reply = QMessageBox.question(self, "Confirmación", f"¿Deseas modificar el elemento {codigo_modificar}?",
+                                             QMessageBox.Yes | QMessageBox.No)
+                if reply == QMessageBox.Yes:
+                    fdao = dao.DAO()
+                    column_values = {}
+                    new_values = []
+                    for header, column in zip(self.headers[1:], self.columns[1:]):
+                        new_value, ok = QInputDialog.getText(self, "Actualizar",
+                                                             f"Ingrese nuevo valor para '{header}':",
+                                                             QLineEdit.Normal, "")
+                        if ok:
+                            column_values[column] = new_value
+                            new_values.append(new_value)
 
-                    fdao.modificar(query_actualizar, new_values)
-                    fdao.cerrar_conexion()
+                    if column_values:  # Verificar si se han ingresado datos para actualizar
+                        update_columns = ", ".join(f"{column} = %s" for column in column_values.keys())
+                        query_actualizar = f"UPDATE {self.table_name} SET {update_columns} WHERE {self.columns[0]} = %s"
+                        new_values.append(codigo_modificar)
+
+                        fdao.modificar(query_actualizar, new_values)
+                        fdao.cerrar_conexion()
                     QMessageBox.information(self, "Éxito", "El elemento se ha actualizado correctamente.")
                     self.create_table()
 
@@ -227,7 +236,7 @@ class ModificarFormularioWindow(FormularioWindow):
                     QMessageBox.information(self, "Confirmación", "No se realizaron cambios en los datos del elemento.")
 
             else:
-                QMessageBox.information(self, "Confirmación", "No se realizaron cambios en los datos del elemento.")
+                QMessageBox.warning(self, "Error", "Elemento no encontrado.")
 
         else:
             QMessageBox.warning(self, "Error", "Ingrese un código válido.")
@@ -754,7 +763,10 @@ class ConsultarCuenta(ConsultarFormularioWindow):
         self.columns = ["cod_user", "clave_user", "rol", "cod_emp"]
         self.columns_table = 4
         self.filter_combo.addItems(["Usuario", "Rol", "Empleado"])
-        self.mapping_columns = {"Usuario": "cod_user", "Rol": "rol",}
+        self.mapping_columns = {
+            "Usuario": "cod_user",
+            "Rol": "rol",
+            "Código de empleado": "cod_emp"}
         self.consultar_button = QPushButton("Consultar")
         self.consultar_button.clicked.connect(self.read_row)
         self.layout.addLayout(self.filter_layout)
