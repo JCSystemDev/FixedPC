@@ -11,7 +11,7 @@ class MainWindow(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("Main - Fixed PC")
-        self.setFixedSize(800, 600)
+        self.setFixedSize(1024, 640)
 
         # Aplicar estilo oscuro
         self.setStyleSheet(qdarkstyle.load_stylesheet())

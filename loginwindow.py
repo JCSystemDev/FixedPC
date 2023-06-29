@@ -1,3 +1,5 @@
+import hashlib
+
 import mysql
 import qdarkstyle
 from PySide6.QtGui import QIcon, QPixmap, Qt, QPalette, QColor
@@ -58,6 +60,7 @@ class LoginWindow(QMainWindow):
     def login(self):
         username = self.lineedit_username.text()
         password = self.lineedit_password.text()
+        password = hashlib.sha256(password.encode('utf-8')).hexdigest()
 
         # Aquí puedes implementar la lógica para verificar el usuario y contraseña en tu base de datos
         # o sistema de autenticación

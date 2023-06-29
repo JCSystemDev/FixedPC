@@ -1,3 +1,5 @@
+import hashlib
+
 import qdarkstyle
 from PySide6.QtGui import QFont, QIcon, QPixmap
 from PySide6.QtWidgets import QDialog, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLineEdit, QMessageBox, \
@@ -72,12 +74,14 @@ class AgregarFormularioWindow(FormularioWindow):
         for campo in campos:
             label = QLabel(campo)
             field = QLineEdit()
+            if campo == "Contraseña":
+                field.setEchoMode(QLineEdit.Password)
             layout.addWidget(label)
             layout.addWidget(field)
             self.field_list.append(field)
             field.textChanged.connect(self.update_field_values)
 
-    def update_field_values(self, text):
+    def update_field_values(self):
         self.field_values = [field.text() for field in self.field_list]
 
     def clear_fields(self):
@@ -87,7 +91,10 @@ class AgregarFormularioWindow(FormularioWindow):
     def insert_row(self):
         columns = self.columnas
         values = self.field_values
-        table_name = self.table_name
+
+        if columns[1] == "clave_user":
+            values[1] = hashlib.sha256(values[1].encode('utf-8')).hexdigest()
+
         column_names = ', '.join(columns)
         if self.autoincrement:
             values.insert(0, "0")
@@ -101,7 +108,7 @@ class AgregarFormularioWindow(FormularioWindow):
             return
 
         # Crear la consulta de inserción con los valores de los campos
-        query = f"INSERT INTO {table_name} ({column_names}) VALUES ('{field_values}')"
+        query = f"INSERT INTO {self.table_name} ({column_names}) VALUES ('{field_values}')"
 
         # Crear una instancia del DAO y ejecutar la consulta de inserción
         daof = dao.DAO()
@@ -265,6 +272,7 @@ class AgregarEmpleado(AgregarFormularioWindow):
         self.layout.setSpacing(10)
         self.setLayout(self.layout)
         self.clear_fields
+
     def create_and_exec(self):
         form = AgregarEmpleado()
         form.exec_()
@@ -276,8 +284,9 @@ class AgregarTicket(AgregarFormularioWindow):
         self.setFixedSize(350, 700)
         self.title_label.setText("Agregar Ticket")
         self.table_name = 'ticket'
-        self.campos = ["Estado del Ticket", "Código de Cliente", "Código de Empleado", "Código de facturación"]
-        self.columnas = ["cod_ticket", "state_ticket", "cod_customer", "cod_emp", "cod_fact"]
+        self.campos = ["Estado del Ticket", "Código de Cliente", "Código de Empleado", "Código de Facturación",
+                       "Código de Servicio", "Código de Repuesto"]
+        self.columnas = ["cod_ticket", "state_ticket", "cod_customer", "cod_emp", "cod_fact", "cod_serv", "cod_rep"]
         self.field_list = []
         self.autoincrement = True
         self.create_fields(self.campos, self.campos_layout)
@@ -305,6 +314,7 @@ class AgregarCuenta(AgregarFormularioWindow):
         self.layout.setSpacing(10)
         self.setLayout(self.layout)
         self.clear_fields
+
     def create_and_exec(self):
         form = AgregarCuenta()
         form.exec_()
@@ -324,6 +334,7 @@ class AgregarRepuesto(AgregarFormularioWindow):
         self.layout.setSpacing(10)
         self.setLayout(self.layout)
         self.clear_fields
+
     def create_and_exec(self):
         form = AgregarRepuesto()
         form.exec_()
@@ -343,6 +354,7 @@ class AgregarServicio(AgregarFormularioWindow):
         self.layout.setSpacing(10)
         self.setLayout(self.layout)
         self.clear_fields
+
     def create_and_exec(self):
         form = AgregarServicio()
         form.exec_()
@@ -417,10 +429,11 @@ class BorrarTicket(BorrarFormularioWindow):
         super().__init__()
         self.set_title_text("Eliminar Ticket")
         self.table_name = "ticket"
-        self.table_widget.setColumnCount(5)
+        self.table_widget.setColumnCount(7)
         self.layout.addWidget(self.table_widget)
-        self.headers = ["Código", "Estado", "Código de cliente", "Código de empleado", "Código de facturación"]
-        self.columns = ["cod_ticket", "state_ticket", "cod_customer", "cod_emp", "cod_fact"]
+        self.headers = ["Código", "Estado", "Código de cliente", "Código de empleado", "Código de facturación",
+                        "Código de Servicio", "Código de Repuesto"]
+        self.columns = ["cod_ticket", "state_ticket", "cod_customer", "cod_emp", "cod_fact", "cod_serv", "cod_rep"]
         self.table_widget.setHorizontalHeaderLabels(self.headers)
         self.create_table()
         self.codigo_label = QLabel("Ingrese el código del ticket que desea eliminar")
@@ -588,8 +601,9 @@ class ModificarTicket(ModificarFormularioWindow):
         self.table_name = "ticket"
         self.table_widget.setColumnCount(5)
         self.layout.addWidget(self.table_widget)
-        self.headers = ["Codigo", "Estado", "Código de cliente", "Código de empleado", "Código de facturación"]
-        self.columns = ["cod_ticket", "state_ticket", "cod_customer", "cod_emp", "cod_fact"]
+        self.headers = ["Codigo", "Estado", "Código de cliente", "Código de empleado", "Código de facturación",
+                        "Código de servicio", "Código de repuesto"]
+        self.columns = ["cod_ticket", "state_ticket", "cod_customer", "cod_emp", "cod_fact", "cod_serv", "cod_rep"]
         self.table_widget.setHorizontalHeaderLabels(self.headers)
         self.create_table()
         self.codigo_label = QLabel("Ingrese el código de ticket que desea actualizar")
@@ -678,8 +692,9 @@ class ConsultarTicket(ConsultarFormularioWindow):
         self.setFixedSize(300, 400)
         self.set_title_text("Consultar Ticket")
         self.table_name = "ticket"
-        self.headers = ["Código", "Estado", "Código de cliente", "Código de Técnico asignado", "Código de facturación"]
-        self.columns = ["cod_ticket", "state_ticket", "cod_customer", "cod_emp", "cod_fact"]
+        self.headers = ["Código", "Estado", "Código de cliente", "Código de Técnico asignado", "Código de facturación",
+                        "Código de servicio", "Código de repuesto"]
+        self.columns = ["cod_ticket", "state_ticket", "cod_customer", "cod_emp", "cod_fact", "cod_serv", "cod_rep"]
         self.columns_table = 5
         self.filter_combo.addItems(["Código", "Estado", "Técnico"])
         self.mapping_columns = {
@@ -695,10 +710,10 @@ class ConsultarTicket(ConsultarFormularioWindow):
         self.filter_layout.addWidget(self.search_field)
         self.filter_layout.addWidget(self.consultar_button)
 
-
     def create_and_exec(self):
         form = ConsultarTicket()
         form.exec_()
+
 
 class ConsultarCliente(ConsultarFormularioWindow):
     def __init__(self):
@@ -724,7 +739,6 @@ class ConsultarCliente(ConsultarFormularioWindow):
         self.filter_layout.addWidget(self.search_field)
         self.filter_layout.addWidget(self.consultar_button)
 
-
     def create_and_exec(self):
         form = ConsultarCliente()
         form.exec_()
@@ -740,10 +754,7 @@ class ConsultarCuenta(ConsultarFormularioWindow):
         self.columns = ["cod_user", "clave_user", "rol", "cod_emp"]
         self.columns_table = 4
         self.filter_combo.addItems(["Usuario", "Rol", "Empleado"])
-        self.mapping_columns = {
-            "Usuario": "cod_user",
-            "Rol": "rol",
-            "Código de empleado": "cod_emp"}
+        self.mapping_columns = {"Usuario": "cod_user", "Rol": "rol",}
         self.consultar_button = QPushButton("Consultar")
         self.consultar_button.clicked.connect(self.read_row)
         self.layout.addLayout(self.filter_layout)
@@ -753,7 +764,6 @@ class ConsultarCuenta(ConsultarFormularioWindow):
         self.filter_layout.addWidget(self.search_field)
         self.filter_layout.addWidget(self.consultar_button)
 
-     
     def create_and_exec(self):
         form = ConsultarCuenta()
         form.exec_()
@@ -782,7 +792,6 @@ class ConsultarEmpleado(ConsultarFormularioWindow):
         self.filter_layout.addWidget(self.search_field)
         self.filter_layout.addWidget(self.consultar_button)
 
-
     def create_and_exec(self):
         form = ConsultarEmpleado()
         form.exec_()
@@ -809,7 +818,6 @@ class ConsultarRepuesto(ConsultarFormularioWindow):
         self.filter_layout.addWidget(self.search_field)
         self.filter_layout.addWidget(self.consultar_button)
 
-
     def create_and_exec(self):
         form = ConsultarRepuesto()
         form.exec_()
@@ -835,7 +843,6 @@ class ConsultarServicio(ConsultarFormularioWindow):
         self.filter_layout.addWidget(self.search_label)
         self.filter_layout.addWidget(self.search_field)
         self.filter_layout.addWidget(self.consultar_button)
-
 
     def create_and_exec(self):
         form = ConsultarServicio()
