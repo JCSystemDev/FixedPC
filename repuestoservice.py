@@ -1,5 +1,3 @@
-from PySide6.QtWidgets import QPushButton, QLabel
-
 from formwindow import ConsultarFormularioWindow, ModificarFormularioWindow, BorrarFormularioWindow, \
     AgregarFormularioWindow
 
@@ -35,7 +33,7 @@ class BorrarRepuesto(BorrarFormularioWindow):
         self.columns = ["cod_rep", "name_rep", "desc_rep", "price_rep", "stock"]
         self.table_widget.setHorizontalHeaderLabels(self.headers)
         self.create_table()
-        self.codigo_label = QLabel("Ingrese el código del cliente que desea eliminar")
+        self.codigo_label.setText("Ingrese el código del cliente que desea eliminar")
         self.layout.addWidget(self.codigo_label)
         self.layout.addWidget(self.codigo_borrar)
         self.layout.addWidget(self.borrar_button)
@@ -56,7 +54,7 @@ class ModificarRepuesto(ModificarFormularioWindow):
         self.columns = ["cod_rep", "name_rep", "desc_rep", "price_rep", "stock"]
         self.table_widget.setHorizontalHeaderLabels(self.headers)
         self.create_table()
-        self.codigo_label = QLabel("Ingrese el código de repuesto que desea actualizar")
+        self.codigo_label.setText("Ingrese el código de repuesto que desea actualizar")
         self.layout.addWidget(self.codigo_label)
         self.layout.addWidget(self.codigo_modificar)
         self.layout.addWidget(self.modificar_button)
@@ -78,7 +76,6 @@ class ConsultarRepuesto(ConsultarFormularioWindow):
         self.filter_combo.addItems(["Código"])
         self.mapping_columns = {
             "Código": "cod_rep"}
-        self.consultar_button = QPushButton("Consultar")
         self.consultar_button.clicked.connect(self.read_row)
         self.layout.addLayout(self.filter_layout)
         self.filter_layout.addWidget(self.filter_label)

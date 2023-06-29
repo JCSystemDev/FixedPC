@@ -131,8 +131,9 @@ class BorrarFormularioWindow(FormularioWindow):
         self.columns = []
         self.table_widget = QTableWidget()
         self.table_widget.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.codigo_label = QLabel()
         self.codigo_borrar = QLineEdit()
-        self.borrar_button = QPushButton("Borrar")
+        self.borrar_button = QPushButton("Eliminar")
         self.borrar_button.clicked.connect(self.delete_row)
 
     def delete_row(self):
@@ -190,6 +191,7 @@ class ModificarFormularioWindow(FormularioWindow):
         self.columns = []
         self.table_widget = QTableWidget()
         self.table_widget.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.codigo_label = QLabel()
         self.codigo_modificar = QLineEdit()
         self.modificar_button = QPushButton("Actualizar")
         self.modificar_button.clicked.connect(self.update_row)
@@ -254,7 +256,8 @@ class ConsultarFormularioWindow(FormularioWindow):
         self.filter_label = QLabel("Filtro de búsqueda:")
         self.filter_combo = QComboBox()
         # Create search field
-        self.search_label = QLabel("Buscar:")
+        self.search_label = QLabel("Elemento a buscar:")
+        self.consultar_button = QPushButton("Buscar")
         self.search_field = QLineEdit()
         self.headers = []
         self.columns = []
@@ -311,18 +314,3 @@ class ConsultarFormularioWindow(FormularioWindow):
             QMessageBox.warning(self, "Error", "Ingresa un valor de búsqueda válido.")
 
         self.search_field.clear()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

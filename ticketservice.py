@@ -1,5 +1,3 @@
-from PySide6.QtWidgets import QLabel, QPushButton
-
 from formwindow import BorrarFormularioWindow, AgregarFormularioWindow, ModificarFormularioWindow, \
     ConsultarFormularioWindow
 
@@ -38,7 +36,7 @@ class BorrarTicket(BorrarFormularioWindow):
         self.columns = ["cod_ticket", "state_ticket", "cod_customer", "cod_emp", "cod_fact", "cod_serv", "cod_rep"]
         self.table_widget.setHorizontalHeaderLabels(self.headers)
         self.create_table()
-        self.codigo_label = QLabel("Ingrese el código del ticket que desea eliminar")
+        self.codigo_label.setText("Ingrese el código del ticket que desea eliminar")
         self.layout.addWidget(self.codigo_label)
         self.layout.addWidget(self.codigo_borrar)
         self.layout.addWidget(self.borrar_button)
@@ -60,7 +58,7 @@ class ModificarTicket(ModificarFormularioWindow):
         self.columns = ["cod_ticket", "state_ticket", "cod_customer", "cod_emp", "cod_fact", "cod_serv", "cod_rep"]
         self.table_widget.setHorizontalHeaderLabels(self.headers)
         self.create_table()
-        self.codigo_label = QLabel("Ingrese el código de ticket que desea actualizar")
+        self.codigo_label.setText("Ingrese el código de ticket que desea actualizar")
         self.layout.addWidget(self.codigo_label)
         self.layout.addWidget(self.codigo_modificar)
         self.layout.addWidget(self.modificar_button)
@@ -85,7 +83,6 @@ class ConsultarTicket(ConsultarFormularioWindow):
             "Código": "cod_ticket",
             "Estado": "state_ticket",
             "Técnico": "cod_emp"}
-        self.consultar_button = QPushButton("Consultar")
         self.consultar_button.clicked.connect(self.read_row)
         self.layout.addLayout(self.filter_layout)
         self.filter_layout.addWidget(self.filter_label)

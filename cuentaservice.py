@@ -1,5 +1,3 @@
-from PySide6.QtWidgets import QPushButton, QLabel
-
 from formwindow import ConsultarFormularioWindow, ModificarFormularioWindow, BorrarFormularioWindow, \
     AgregarFormularioWindow
 
@@ -27,7 +25,7 @@ class AgregarCuenta(AgregarFormularioWindow):
 class BorrarCuenta(BorrarFormularioWindow):
     def __init__(self):
         super().__init__()
-        self.set_title_text("Eliminar Usuario")
+        self.set_title_text("Eliminar Cuenta")
         self.table_name = "cuenta"
         self.table_widget.setColumnCount(4)
         self.layout.addWidget(self.table_widget)
@@ -35,7 +33,7 @@ class BorrarCuenta(BorrarFormularioWindow):
         self.columns = ["cod_user", "clave_user", "rol", "cod_emp"]
         self.table_widget.setHorizontalHeaderLabels(self.headers)
         self.create_table()
-        self.codigo_label = QLabel("Ingrese el nombre de usuario de la cuenta que desea eliminar")
+        self.codigo_label.setText("Ingrese el nombre de usuario de la cuenta que desea eliminar")
         self.layout.addWidget(self.codigo_label)
         self.layout.addWidget(self.codigo_borrar)
         self.layout.addWidget(self.borrar_button)
@@ -56,7 +54,7 @@ class ModificarCuenta(ModificarFormularioWindow):
         self.columns = ["cod_user", "clave_user", "rol", "cod_emp"]
         self.table_widget.setHorizontalHeaderLabels(self.headers)
         self.create_table()
-        self.codigo_label = QLabel("Ingrese el código de cuenta que desea actualizar")
+        self.codigo_label.setText("Ingrese el código de cuenta que desea actualizar")
         self.layout.addWidget(self.codigo_label)
         self.layout.addWidget(self.codigo_modificar)
         self.layout.addWidget(self.modificar_button)
@@ -80,7 +78,6 @@ class ConsultarCuenta(ConsultarFormularioWindow):
             "Usuario": "cod_user",
             "Rol": "rol",
             "Código de empleado": "cod_emp"}
-        self.consultar_button = QPushButton("Consultar")
         self.consultar_button.clicked.connect(self.read_row)
         self.layout.addLayout(self.filter_layout)
         self.filter_layout.addWidget(self.filter_label)

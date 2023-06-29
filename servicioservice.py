@@ -1,5 +1,3 @@
-from PySide6.QtWidgets import QLabel, QPushButton
-
 from formwindow import ConsultarFormularioWindow, ModificarFormularioWindow, AgregarFormularioWindow, \
     BorrarFormularioWindow
 
@@ -35,7 +33,7 @@ class BorrarServicio(BorrarFormularioWindow):
         self.columns = ["cod_serv", "name_serv", "desc_serv", "price_serv"]
         self.table_widget.setHorizontalHeaderLabels(self.headers)
         self.create_table()
-        self.codigo_label = QLabel("Ingrese el código del servicio que desea eliminar")
+        self.codigo_label.setText("Ingrese el código del servicio que desea eliminar")
         self.layout.addWidget(self.codigo_label)
         self.layout.addWidget(self.codigo_borrar)
         self.layout.addWidget(self.borrar_button)
@@ -56,7 +54,7 @@ class ModificarServicio(ModificarFormularioWindow):
         self.columns = ["cod_serv", "name_serv", "desc_serv", "price_serv"]
         self.table_widget.setHorizontalHeaderLabels(self.headers)
         self.create_table()
-        self.codigo_label = QLabel("Ingrese el código de servicio que desea actualizar")
+        self.codigo_label.setText("Ingrese el código de servicio que desea actualizar")
         self.layout.addWidget(self.codigo_label)
         self.layout.addWidget(self.codigo_modificar)
         self.layout.addWidget(self.modificar_button)
@@ -78,7 +76,6 @@ class ConsultarServicio(ConsultarFormularioWindow):
         self.filter_combo.addItems(["Código"])
         self.mapping_columns = {
             "Código": "cod_serv"}
-        self.consultar_button = QPushButton("Consultar")
         self.consultar_button.clicked.connect(self.read_row)
         self.layout.addLayout(self.filter_layout)
         self.filter_layout.addWidget(self.filter_label)
