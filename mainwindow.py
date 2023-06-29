@@ -2,8 +2,12 @@ import qdarkstyle
 from PySide6.QtGui import QIcon, QPixmap, Qt, QFont
 from PySide6.QtWidgets import QMainWindow, QTabWidget, QHBoxLayout, QWidget, QPushButton, QVBoxLayout, QLabel, \
     QMessageBox
-import dao
-import formwindow
+import clienteservice
+import cuentaservice
+import empleadoservice
+import repuestoservice
+import servicioservice
+import ticketservice
 
 
 class MainWindow(QMainWindow):
@@ -82,72 +86,94 @@ class MainWindow(QMainWindow):
     def check_user_role(self, role):
         if role == "administrador":
 
-            self.create_tab(4, ["Agregar Ticket", "Borrar Ticket", "Modificar Ticket", "Consultar Ticket"],
-                            "Ticket", "img/ticket.png", "Gestión de Tickets",
-                            [formwindow.AgregarTicket.create_and_exec, formwindow.BorrarTicket.create_and_exec,
-                             formwindow.ModificarTicket.create_and_exec, formwindow.ConsultarTicket.create_and_exec])
+            self.create_tab(4, ["Crear Ticket", "Eliminar Ticket", "Actualizar Ticket", "Buscar Ticket"],
+                            "Ticket", "img/ticket.png", "Gestión de Tickets de reparación",
+                            [ticketservice.AgregarTicket.create_and_exec,
+                             ticketservice.BorrarTicket.create_and_exec,
+                             ticketservice.ModificarTicket.create_and_exec,
+                             ticketservice.ConsultarTicket.create_and_exec])
 
-            self.create_tab(4, ["Agregar Usuario", "Borrar Usuario", "Modificar Usuario", "Consultar Usuario"],
-                            "Usuario", "img/usuario.png", "Gestión de Usuarios",
-                            [formwindow.AgregarCuenta.create_and_exec, formwindow.BorrarCuenta.create_and_exec,
-                             formwindow.ModificarCuenta.create_and_exec, formwindow.ConsultarCuenta.create_and_exec])
+            self.create_tab(4, ["Crear Cuenta", "Eliminar Cuenta", "Actualizar Cuenta", "Buscar Cuenta"],
+                            "Usuario", "img/usuario.png", "Gestión de Cuentas de Usuario",
+                            [cuentaservice.AgregarCuenta.create_and_exec,
+                             cuentaservice.BorrarCuenta.create_and_exec,
+                             cuentaservice.ModificarCuenta.create_and_exec,
+                             cuentaservice.ConsultarCuenta.create_and_exec])
 
-            self.create_tab(4, ["Agregar Cliente", "Borrar Cliente", "Modificar Cliente", "Consultar Cliente"],
+            self.create_tab(4, ["Crear Cliente", "Eliminar Cliente", "Actualizar Cliente", "Buscar Cliente"],
                             "Cliente", "img/cliente.png", "Gestión de Clientes",
-                            [formwindow.AgregarCliente.create_and_exec, formwindow.BorrarCliente.create_and_exec,
-                             formwindow.ModificarCliente.create_and_exec, formwindow.ConsultarCliente.create_and_exec])
+                            [clienteservice.AgregarCliente.create_and_exec,
+                             clienteservice.BorrarCliente.create_and_exec,
+                             clienteservice.ModificarCliente.create_and_exec,
+                             clienteservice.ConsultarCliente.create_and_exec])
 
-            self.create_tab(4, ["Agregar Repuesto", "Borrar Repuesto", "Modificar Repuesto", "Consultar Repuesto"],
-                            "Repuesto", "img/repuesto.png", "Gestión de Repuestos",
-                            [formwindow.AgregarRepuesto.create_and_exec, formwindow.BorrarRepuesto.create_and_exec,
-                             formwindow.ModificarRepuesto.create_and_exec, formwindow.ConsultarRepuesto.create_and_exec])
+            self.create_tab(4, ["Crear Repuesto", "Eliminar Repuesto", "Actualizar Repuesto", "Buscar Repuesto"],
+                            "Repuesto", "img/repuesto.png", "Gestión de Inventario de Repuestos",
+                            [repuestoservice.AgregarRepuesto.create_and_exec,
+                             repuestoservice.BorrarRepuesto.create_and_exec,
+                             repuestoservice.ModificarRepuesto.create_and_exec,
+                             repuestoservice.ConsultarRepuesto.create_and_exec])
 
-            self.create_tab(4, ["Agregar Servicio", "Borrar Servicio", "Modificar Servicio", "Consultar Servicio"],
+            self.create_tab(4, ["Crear Servicio", "Eliminar Servicio", "Actualizar Servicio", "Buscar Servicio"],
                             "Servicio", "img/servicio.png", "Gestión de Servicios",
-                            [formwindow.AgregarServicio.create_and_exec, formwindow.BorrarServicio.create_and_exec,
-                             formwindow.ModificarServicio.create_and_exec, formwindow.ConsultarServicio.create_and_exec])
+                            [servicioservice.AgregarServicio.create_and_exec,
+                             servicioservice.BorrarServicio.create_and_exec,
+                             servicioservice.ModificarServicio.create_and_exec,
+                             servicioservice.ConsultarServicio.create_and_exec])
 
-            self.create_tab(4, ["Agregar Empleado", "Borrar Empleado", "Modificar Empleado", "Consultar Empleado"],
+            self.create_tab(4, ["Crear Empleado", "Eliminar Empleado", "Actualizar Empleado", "Buscar Empleado"],
                             "Empleado", "img/empleado.png", "Gestión de Empleados",
-                            [formwindow.AgregarEmpleado.create_and_exec, formwindow.BorrarEmpleado.create_and_exec,
-                             formwindow.ModificarEmpleado.create_and_exec, formwindow.ConsultarEmpleado.create_and_exec])
+                            [empleadoservice.AgregarEmpleado.create_and_exec,
+                             empleadoservice.BorrarEmpleado.create_and_exec,
+                             empleadoservice.ModificarEmpleado.create_and_exec,
+                             empleadoservice.ConsultarEmpleado.create_and_exec])
 
         elif role == "administrativo":
 
-            self.create_tab(3, ["Agregar Empleado", "Modificar Empleado", "Consultar Empleado"],
+            self.create_tab(3, ["Crear Empleado", "Actualizar Empleado", "Buscar Empleado"],
                             "Empleado", "img/empleado.png", "Gestión de Empleados",
-                            [formwindow.AgregarEmpleado.create_and_exec, formwindow.ModificarEmpleado.create_and_exec, formwindow.ConsultarEmpleado.create_and_exec])
+                            [empleadoservice.AgregarEmpleado.create_and_exec,
+                             empleadoservice.ModificarEmpleado.create_and_exec,
+                             empleadoservice.ConsultarEmpleado.create_and_exec])
 
-            self.create_tab(3, ["Agregar Cliente", "Modificar Cliente", "Consultar Cliente"],
+            self.create_tab(3, ["Crear Cliente", "Actualizar Cliente", "Buscar Cliente"],
                             "Cliente", "img/cliente.png", "Gestión de Clientes",
-                            [formwindow.AgregarCliente.create_and_exec, formwindow.ModificarCliente.create_and_exec, formwindow.ConsultarCliente.create_and_exec])
-
+                            [clienteservice.AgregarCliente.create_and_exec,
+                             clienteservice.ModificarCliente.create_and_exec,
+                             clienteservice.ConsultarCliente.create_and_exec])
 
         elif role == "tecnico":
 
-            self.create_tab(1, ["Consultar Repuesto"],
+            self.create_tab(1, ["Buscar Repuesto"],
                             "Repuesto", "img/repuesto.png", "Gestión de Repuestos",
-                            [formwindow.ConsultarRepuesto.create_and_exec])
+                            [repuestoservice.ConsultarRepuesto.create_and_exec])
 
-            self.create_tab(3, ["Agregar Servicio", "Modificar Servicio", "Consultar Servicio"],
+            self.create_tab(3, ["Crear Servicio", "Actualizar Servicio", "Buscar Servicio"],
                             "Servicio", "img/servicio.png", "Gestión de Servicios",
-                            [formwindow.AgregarServicio.create_and_exec, formwindow.ModificarServicio.create_and_exec, formwindow.ConsultarServicio.create_and_exec])
-
+                            [servicioservice.AgregarServicio.create_and_exec,
+                             servicioservice.ModificarServicio.create_and_exec,
+                             servicioservice.ConsultarServicio.create_and_exec])
 
         elif role == "inventario":
-            self.create_tab(3, ["Agregar Repuesto", "Modificar Repuesto", "Consultar Repuesto"],
+            self.create_tab(3, ["Crear Repuesto", "Actualizar Repuesto", "Buscar Repuesto"],
                             "Repuesto", "img/repuesto.png", "Gestión de Repuestos",
-                            [formwindow.AgregarRepuesto.create_and_exec, formwindow.ModificarRepuesto.create_and_exec, formwindow.ConsultarRepuesto.create_and_exec])
+                            [repuestoservice.AgregarRepuesto.create_and_exec,
+                             repuestoservice.ModificarRepuesto.create_and_exec,
+                             repuestoservice.ConsultarRepuesto.create_and_exec])
 
         elif role == "recepcionista":
 
-            self.create_tab(3, ["Agregar Ticket",  "Modificar Ticket", "Consultar Ticket"],
+            self.create_tab(3, ["Crear Ticket",  "Actualizar Ticket", "Buscar Ticket"],
                             "Ticket", "img/ticket.png", "Gestión de Tickets",
-                            [formwindow.AgregarTicket.create_and_exec, formwindow.ModificarTicket.create_and_exec, formwindow.ConsultarTicket.create_and_exec])
+                            [ticketservice.AgregarTicket.create_and_exec,
+                             ticketservice.ModificarTicket.create_and_exec,
+                             ticketservice.ConsultarTicket.create_and_exec])
 
-            self.create_tab(3, ["Agregar Cliente", "Modificar Cliente", "Consultar Cliente"],
+            self.create_tab(3, ["Crear Cliente", "Actualizar Cliente", "Buscar Cliente"],
                             "Cliente", "img/cliente.png", "Gestión de Clientes",
-                            [formwindow.AgregarCliente.create_and_exec, formwindow.ModificarCliente.create_and_exec, formwindow.ConsultarCliente.create_and_exec])
+                            [clienteservice.AgregarCliente.create_and_exec,
+                             clienteservice.ModificarCliente.create_and_exec,
+                             clienteservice.ConsultarCliente.create_and_exec])
 
     def closeEvent(self, event):
         reply = QMessageBox.question(
