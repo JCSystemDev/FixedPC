@@ -1,12 +1,8 @@
 import pywhatkit
 import datetime
+import time
 
 
-def obtener_hora_actual():
-    hora_actual = datetime.datetime.now()
-    print(hora_actual)
-    return hora_actual
-
-
-def enviar_notificacion(contact, message, hora, minuto):
-    pywhatkit.sendwhatmsg(contact, message, hora, minuto)
+def enviar_mensaje_despues(mensaje, hora, minuto):
+    # Enviar el mensaje
+    pywhatkit.sendwhatmsg("+56958997028", mensaje, hora, minuto)

@@ -1,8 +1,8 @@
-from formwindow import ConsultarFormularioWindow, ModificarFormularioWindow, BorrarFormularioWindow, \
-    AgregarFormularioWindow
+from formwindow import Buscar, Actualizar, Eliminar, \
+    Crear
 
 
-class AgregarEmpleado(AgregarFormularioWindow):
+class AgregarEmpleado(Crear):
     def __init__(self):
         super().__init__()
         self.setFixedSize(350, 700)
@@ -23,7 +23,7 @@ class AgregarEmpleado(AgregarFormularioWindow):
         form.exec_()
 
 
-class BorrarEmpleado(BorrarFormularioWindow):
+class BorrarEmpleado(Eliminar):
     def __init__(self):
         super().__init__()
         self.set_title_text("Eliminar Empleado")
@@ -44,7 +44,7 @@ class BorrarEmpleado(BorrarFormularioWindow):
         form.exec_()
 
 
-class ModificarEmpleado(ModificarFormularioWindow):
+class ModificarEmpleado(Actualizar):
     def __init__(self):
         super().__init__()
         self.set_title_text("Actualizar Empleado")
@@ -65,7 +65,7 @@ class ModificarEmpleado(ModificarFormularioWindow):
         form.exec_()
 
 
-class ConsultarEmpleado(ConsultarFormularioWindow):
+class ConsultarEmpleado(Buscar):
     def __init__(self):
         super().__init__()
         self.setFixedSize(300, 400)

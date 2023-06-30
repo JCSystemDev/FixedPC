@@ -1,13 +1,18 @@
 import hashlib
+from datetime import datetime
+
 import qdarkstyle
 from PySide6.QtGui import QFont, QIcon, QPixmap
 from PySide6.QtWidgets import QDialog, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLineEdit, QMessageBox, \
      QTableWidget, QTableWidgetItem, QAbstractItemView, QInputDialog, QComboBox
 from PySide6.QtCore import Qt
+from fpdf import FPDF
+
 import dao
+import notifications
 
 
-class FormularioWindow(QDialog):
+class FormWindow(QDialog):
     def __init__(self):
         super().__init__()
         self.setStyleSheet(qdarkstyle.load_stylesheet())
@@ -53,7 +58,7 @@ class FormularioWindow(QDialog):
                 self.table_widget.setItem(row_index, col_index, item)
 
 
-class AgregarFormularioWindow(FormularioWindow):
+class Crear(FormWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Fixed PC - Agregar")
@@ -120,7 +125,7 @@ class AgregarFormularioWindow(FormularioWindow):
             QMessageBox.critical(self, "Error", f"No se pudo agregar el Documento.\nError: {str(e)}")
 
 
-class BorrarFormularioWindow(FormularioWindow):
+class Eliminar(FormWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Fixed PC - Eliminar")
@@ -180,7 +185,7 @@ class BorrarFormularioWindow(FormularioWindow):
         self.codigo_borrar.clear()
 
 
-class ModificarFormularioWindow(FormularioWindow):
+class Actualizar(FormWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Fixed PC - Modificar")
@@ -245,9 +250,10 @@ class ModificarFormularioWindow(FormularioWindow):
         self.codigo_modificar.clear()
 
 
-class ConsultarFormularioWindow(FormularioWindow):
+class Buscar(FormWindow):
     def __init__(self):
         super().__init__()
+        self.table_name = ""
         self.setWindowTitle("Fixed PC - Consultar")
         self.image_path = "img/buscar.png"
         self.update_image()
@@ -314,3 +320,153 @@ class ConsultarFormularioWindow(FormularioWindow):
             QMessageBox.warning(self, "Error", "Ingresa un valor de búsqueda válido.")
 
         self.search_field.clear()
+
+
+class Reporte(FormWindow):
+    pass
+
+
+class Facturacion(QDialog):
+    def __init__(self):
+        super().__init__()
+        self.setStyleSheet(qdarkstyle.load_stylesheet())
+        self.setWindowIcon(QIcon("img/icon.ico"))
+        self.setWindowTitle("Crear Facturación")
+
+        self.code_label = QLabel("Ingrese el código de facturación:")
+        self.code_lineedit = QLineEdit()
+        self.create_button = QPushButton("Crear Facturación")
+        self.total_neto = 0
+        self.code_customer = 0
+        self.customer_name = ""
+        self.replace_chars = "'(),"
+        self.replace_table = str.maketrans("","", self.replace_chars)
+        self.date_today = datetime.now()
+        self.date_today = self.date_today.strftime("%d-%m-%Y")
+        self.total_iva = 0
+        self.create_button.clicked.connect(self.create_billing)
+        layout = QVBoxLayout()
+        layout.addWidget(self.code_label)
+        layout.addWidget(self.code_lineedit)
+        layout.addWidget(self.create_button)
+        self.setLayout(layout)
+
+    def create_billing(self):
+        self.code = self.code_lineedit.text().strip()
+        if not self.code:
+            QMessageBox.warning(self, "Error", "El código de facturación no puede estar vacío.")
+            return
+
+        # Realizar consulta para obtener los datos de ticketservicio y ticketrepuesto
+        fdao = dao.DAO()
+        query_serv = f"SELECT s.cod_serv, s.name_serv, s.price_serv " \
+                f"FROM ticketservicio ts " \
+                f"JOIN servicio s ON ts.cod_serv = s.cod_serv " \
+                f"WHERE ts.cod_fact = {self.code} AND ts.state_ticket = 'cerrado' "
+        result_serv = fdao.mostrar(query_serv)
+        query_rep = f"SELECT s.cod_rep, s.name_rep, s.price_rep " \
+                f"FROM ticketrepuesto ts " \
+                f"JOIN repuesto s ON ts.cod_rep = s.cod_rep " \
+                f"WHERE ts.cod_fact = {self.code} AND ts.state_ticket = 'cerrado' "
+        result_rep = fdao.mostrar(query_rep)
+        query_customer = f"SELECT CONCAT(c.name_customer, ' ', c.lastname_customer) AS nombre_customer " \
+                         f"FROM ticketservicio ts JOIN cliente c ON ts.cod_customer = c.cod_customer " \
+                         f"WHERE ts.cod_fact = {self.code}"
+        result_customer = fdao.mostrar(query_customer)
+        self.customer_name = str(result_customer[0])
+        self.customer_name = self.customer_name.translate(self.replace_table)
+        fdao.cerrar_conexion()
+
+        if not result_serv and not result_rep:
+            QMessageBox.information(self, "Información",
+                                    "No se encontraron datos para el código de facturación ingresado.")
+            return
+
+        # Crear el documento PDF
+        pdf = FPDF()
+        pdf.set_auto_page_break(auto=True, margin=15)
+        pdf.add_page()
+
+        # Configurar estilo de fuente
+        pdf.set_font(family="Arial", style="B", size=12)
+
+        # Agregar encabezado
+        pdf.cell(0, 10, f"Facturación: {self.code}", ln=True, align="C")
+        pdf.ln(5)
+
+        # Agregar nombre del cliente
+        pdf.cell(0, 10, f"Cliente: {self.customer_name}", ln=True)
+
+        # # Agregar fecha de facturación
+        pdf.cell(0, 10, f"Fecha: {self.date_today}", ln=True)
+        pdf.ln(5)
+
+        # Agregar tabla con los datos de los servicios y repuestos
+        headers = ["Item", "Descripción", "Valor Neto"]
+        pdf.set_font(family="Arial", style="B", size=12)
+        for header in headers:
+            pdf.cell(50, 10, header, border=1)
+        pdf.ln(10)
+
+        # Agregar los datos de los servicios
+        self.add_data_to_pdf(pdf, result_serv)
+        total_neto_serv = self.total_neto
+
+        # Agregar los datos de los repuestos
+        self.add_data_to_pdf(pdf, result_rep)
+        total_neto_rep = self.total_neto
+        total_neto_rep = self.total_neto
+
+        # Calcular totales
+        pdf.ln(10)
+        pdf.cell(0, 10, f"Total Neto Servicios: ${total_neto_serv}", ln=True)
+        pdf.cell(0, 10, f"Total Neto Repuestos: ${total_neto_rep}", ln=True)
+        pdf.cell(0, 10, f"Total Neto: ${total_neto_serv + total_neto_rep}", ln=True)
+        self.total_iva = int((total_neto_serv + total_neto_rep) * 0.19)
+        pdf.cell(0, 10, f"IVA (19%): ${self.total_iva}", ln=True)
+        pdf.cell(0, 10, f"Total con IVA: $"f"{int(self.total_iva + total_neto_serv + total_neto_rep)}", ln=True)
+        pdf.ln(10)
+
+        # Agregar pie de página
+        pdf.set_font("Arial", size=10, style="I")
+        pdf.cell(0, 10, "FIXED PC - 2023", ln=True, align="C")
+
+        # Guardar el documento PDF
+        pdf_filename = f"{self.code}.pdf"
+        pdf.output(pdf_filename)
+
+        fdao = dao.DAO()
+        query = f"INSERT INTO factura " \
+                f"(cod_fact, name_customer, valor_total_neto, valor_total_iva, valor_total, fecha_fact) " \
+                f"VALUES ({self.code}, '{self.customer_name}', {total_neto_serv + total_neto_rep}, {self.total_iva}, " \
+                f"{int(self.total_iva + total_neto_serv + total_neto_rep)}, '{datetime.now()}')"
+        result = fdao.crear(query)
+        fdao.cerrar_conexion()
+        QMessageBox.information(self, "Información", f"Se ha creado el documento PDF: {pdf_filename}")
+        hora_actual = datetime.now()
+        hora = hora_actual.hour
+        minuto = hora_actual.minute + 1
+        print(hora, minuto)
+
+        # Enviar el mensaje 1 minuto después de la hora actual
+        notifications.enviar_mensaje_despues(f"Hola {self.customer_name}, su pedido esta listo para retiro." \
+                                             f" Su número de facturación es {self.code} y el valor total es por " \
+                                             f"${int(self.total_iva + total_neto_serv + total_neto_rep)}", hora, minuto)
+
+    def add_data_to_pdf(self, pdf, data_list):
+        pdf.set_font(family="Arial", size=12)
+        self.total_neto = 0
+        for data in data_list:
+            item = data[0]
+            desc = data[1]
+            price = data[2]
+
+            self.total_neto += int(price)
+            pdf.cell(50, 10, item, border=1)
+            pdf.cell(50, 10, desc, border=1)
+            pdf.cell(50, 10, f"${price}", border=1)
+            pdf.ln()
+
+    def create_and_exec(self):
+        form = Facturacion()
+        form.exec_()

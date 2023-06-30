@@ -5,14 +5,24 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="95b9d165-41ef-4ac6-8b92-368a2f62ad67" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tabs/__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tabs/reporte.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tabs/ticketservicio.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clienteservice.py" beforeDir="false" afterPath="$PROJECT_DIR$/clienteservice.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cuentaservice.py" beforeDir="false" afterPath="$PROJECT_DIR$/cuentaservice.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/empleadoservice.py" beforeDir="false" afterPath="$PROJECT_DIR$/empleadoservice.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PyWhatKit_DB.txt" beforeDir="false" afterPath="$PROJECT_DIR$/PyWhatKit_DB.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/clienteservice.py" beforeDir="false" afterPath="$PROJECT_DIR$/tabs/cliente.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cuentaservice.py" beforeDir="false" afterPath="$PROJECT_DIR$/tabs/cuenta.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/empleadoservice.py" beforeDir="false" afterPath="$PROJECT_DIR$/tabs/empleado.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/formwindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/formwindow.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/repuestoservice.py" beforeDir="false" afterPath="$PROJECT_DIR$/repuestoservice.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/servicioservice.py" beforeDir="false" afterPath="$PROJECT_DIR$/servicioservice.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ticketservice.py" beforeDir="false" afterPath="$PROJECT_DIR$/ticketservice.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/Icons.zip" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/loginwindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/loginwindow.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mainwindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/mainwindow.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notifications.py" beforeDir="false" afterPath="$PROJECT_DIR$/notifications.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/reporteservice.py" beforeDir="false" afterPath="$PROJECT_DIR$/img/reporte.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/repuestoservice.py" beforeDir="false" afterPath="$PROJECT_DIR$/tabs/repuesto.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/servicioservice.py" beforeDir="false" afterPath="$PROJECT_DIR$/tabs/servicio.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ticketservice.py" beforeDir="false" afterPath="$PROJECT_DIR$/tabs/ticketrepuesto.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -33,26 +43,41 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="ProjectId" id="2RaU8Mb7AUS1jjo45321yRbK95x" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/JC System/Desktop/FixedPC&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/JC System/Desktop/FixedPC/tabs&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
+    ]
   }
 }</component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\JC System\Desktop\FixedPC\tabs" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\JC System\Desktop\FixedPC\views" />
+      <recent name="C:\Users\JC System\Desktop\FixedPC\dao" />
+      <recent name="C:\Users\JC System\Desktop\FixedPC\tabs" />
       <recent name="C:\Users\JC System\Desktop\FixedPC\services" />
       <recent name="C:\Users\JC System\Desktop\TDA\img" />
     </key>
@@ -110,17 +135,23 @@
       <workItem from="1687964274707" duration="87000" />
       <workItem from="1688002759004" duration="3140000" />
       <workItem from="1687999496643" duration="7843000" />
-      <workItem from="1688043033375" duration="13484000" />
+      <workItem from="1688043033375" duration="32340000" />
+      <workItem from="1688132850735" duration="20377000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+  </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/FixedPC$notifications.coverage" NAME="notifications Coverage Results" MODIFIED="1688161032488" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/TDA$main.coverage" NAME="fixedpc Coverage Results" MODIFIED="1687578754488" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/TDA$mainwindow.coverage" NAME="mainwindow Coverage Results" MODIFIED="1687740458924" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/FixedPC$fixedpc.coverage" NAME="fixedpc Coverage Results" MODIFIED="1688057850470" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/FixedPC$formwindow.coverage" NAME="formwindow Coverage Results" MODIFIED="1688161485080" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/FixedPC$fixedpc.coverage" NAME="fixedpc Coverage Results" MODIFIED="1688161496976" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/TDA$smtp.coverage" NAME="smtp Coverage Results" MODIFIED="1687729871922" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/TDA$notifications.coverage" NAME="notifications Coverage Results" MODIFIED="1687738280144" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/TDA$formwindow.coverage" NAME="formwindow Coverage Results" MODIFIED="1687573327067" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

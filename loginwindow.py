@@ -1,5 +1,4 @@
 import hashlib
-
 import mysql
 import qdarkstyle
 from PySide6.QtGui import QIcon, QPixmap, Qt, QPalette, QColor

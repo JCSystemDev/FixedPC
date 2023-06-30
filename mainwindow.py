@@ -1,13 +1,11 @@
 import qdarkstyle
+from PySide6.QtCore import Signal
 from PySide6.QtGui import QIcon, QPixmap, Qt, QFont
 from PySide6.QtWidgets import QMainWindow, QTabWidget, QHBoxLayout, QWidget, QPushButton, QVBoxLayout, QLabel, \
     QMessageBox
-import clienteservice
-import cuentaservice
-import empleadoservice
-import repuestoservice
-import servicioservice
-import ticketservice
+
+import formwindow
+from tabs import ticketservicio, servicio, reporte, repuesto, cuenta, cliente, empleado, ticketrepuesto
 
 
 class MainWindow(QMainWindow):
@@ -16,6 +14,7 @@ class MainWindow(QMainWindow):
 
         self.setWindowTitle("Main - Fixed PC")
         self.setFixedSize(1024, 640)
+        self.closed = Signal()
 
         # Aplicar estilo oscuro
         self.setStyleSheet(qdarkstyle.load_stylesheet())
@@ -86,94 +85,133 @@ class MainWindow(QMainWindow):
     def check_user_role(self, role):
         if role == "administrador":
 
-            self.create_tab(4, ["Crear Ticket", "Eliminar Ticket", "Actualizar Ticket", "Buscar Ticket"],
-                            "Ticket", "img/ticket.png", "Gestión de Tickets de reparación",
-                            [ticketservice.AgregarTicket.create_and_exec,
-                             ticketservice.BorrarTicket.create_and_exec,
-                             ticketservice.ModificarTicket.create_and_exec,
-                             ticketservice.ConsultarTicket.create_and_exec])
+            self.create_tab(4, ["Crear Ticket de Servicio", "Eliminar Ticket de Servicio",
+                                "Actualizar Ticket de Servicio", "Buscar Ticket de Servicio"],
+                            "Ticket Servicio", "img/ticket.png", "Gestión de Tickets de Servicio",
+                            [ticketservicio.AgregarTicketServicio.create_and_exec,
+                             ticketservicio.BorrarTicketServicio.create_and_exec,
+                             ticketservicio.ModificarTicketServicio.create_and_exec,
+                             ticketservicio.ConsultarTicketServicio.create_and_exec])
+
+            self.create_tab(4, ["Crear Ticket de Repuesto", "Eliminar Ticket de Repuesto",
+                                "Actualizar Ticket de Repuesto", "Buscar Ticket de Repuesto"],
+                            "Ticket Repuesto", "img/ticket.png", "Gestión de Tickets de Respuesto",
+                            [ticketrepuesto.AgregarTicketRepuesto.create_and_exec,
+                             ticketrepuesto.BorrarTicketRepuesto.create_and_exec,
+                             ticketrepuesto.ModificarTicketRespuesto.create_and_exec,
+                             ticketrepuesto.ConsultarTicketRepuesto.create_and_exec])
 
             self.create_tab(4, ["Crear Cuenta", "Eliminar Cuenta", "Actualizar Cuenta", "Buscar Cuenta"],
-                            "Usuario", "img/usuario.png", "Gestión de Cuentas de Usuario",
-                            [cuentaservice.AgregarCuenta.create_and_exec,
-                             cuentaservice.BorrarCuenta.create_and_exec,
-                             cuentaservice.ModificarCuenta.create_and_exec,
-                             cuentaservice.ConsultarCuenta.create_and_exec])
+                            "Cuenta", "img/usuario.png", "Gestión de Cuentas de Usuario",
+                            [cuenta.AgregarCuenta.create_and_exec,
+                             cuenta.BorrarCuenta.create_and_exec,
+                             cuenta.ModificarCuenta.create_and_exec,
+                             cuenta.ConsultarCuenta.create_and_exec])
 
             self.create_tab(4, ["Crear Cliente", "Eliminar Cliente", "Actualizar Cliente", "Buscar Cliente"],
                             "Cliente", "img/cliente.png", "Gestión de Clientes",
-                            [clienteservice.AgregarCliente.create_and_exec,
-                             clienteservice.BorrarCliente.create_and_exec,
-                             clienteservice.ModificarCliente.create_and_exec,
-                             clienteservice.ConsultarCliente.create_and_exec])
+                            [cliente.AgregarCliente.create_and_exec,
+                             cliente.BorrarCliente.create_and_exec,
+                             cliente.ModificarCliente.create_and_exec,
+                             cliente.ConsultarCliente.create_and_exec])
 
             self.create_tab(4, ["Crear Repuesto", "Eliminar Repuesto", "Actualizar Repuesto", "Buscar Repuesto"],
                             "Repuesto", "img/repuesto.png", "Gestión de Inventario de Repuestos",
-                            [repuestoservice.AgregarRepuesto.create_and_exec,
-                             repuestoservice.BorrarRepuesto.create_and_exec,
-                             repuestoservice.ModificarRepuesto.create_and_exec,
-                             repuestoservice.ConsultarRepuesto.create_and_exec])
+                            [repuesto.AgregarRepuesto.create_and_exec,
+                             repuesto.BorrarRepuesto.create_and_exec,
+                             repuesto.ModificarRepuesto.create_and_exec,
+                             repuesto.ConsultarRepuesto.create_and_exec])
 
             self.create_tab(4, ["Crear Servicio", "Eliminar Servicio", "Actualizar Servicio", "Buscar Servicio"],
                             "Servicio", "img/servicio.png", "Gestión de Servicios",
-                            [servicioservice.AgregarServicio.create_and_exec,
-                             servicioservice.BorrarServicio.create_and_exec,
-                             servicioservice.ModificarServicio.create_and_exec,
-                             servicioservice.ConsultarServicio.create_and_exec])
+                            [servicio.AgregarServicio.create_and_exec,
+                             servicio.BorrarServicio.create_and_exec,
+                             servicio.ModificarServicio.create_and_exec,
+                             servicio.ConsultarServicio.create_and_exec])
 
             self.create_tab(4, ["Crear Empleado", "Eliminar Empleado", "Actualizar Empleado", "Buscar Empleado"],
                             "Empleado", "img/empleado.png", "Gestión de Empleados",
-                            [empleadoservice.AgregarEmpleado.create_and_exec,
-                             empleadoservice.BorrarEmpleado.create_and_exec,
-                             empleadoservice.ModificarEmpleado.create_and_exec,
-                             empleadoservice.ConsultarEmpleado.create_and_exec])
+                            [empleado.AgregarEmpleado.create_and_exec,
+                             empleado.BorrarEmpleado.create_and_exec,
+                             empleado.ModificarEmpleado.create_and_exec,
+                             empleado.ConsultarEmpleado.create_and_exec])
+
+            self.create_tab(4, ["Facturación", "Clientes", "Ventas",
+                                "Servicios/Repuestos"],
+                            "Reporte", "img/reporte.png", "Gestión de Reportes",
+                            [formwindow.Facturacion.create_and_exec,
+                             reporte.ReporteCliente.create_and_exec,
+                             reporte.ReporteVenta.create_and_exec,
+                             reporte.ReporteServicioRepuesto.create_and_exec])
 
         elif role == "administrativo":
 
             self.create_tab(3, ["Crear Empleado", "Actualizar Empleado", "Buscar Empleado"],
                             "Empleado", "img/empleado.png", "Gestión de Empleados",
-                            [empleadoservice.AgregarEmpleado.create_and_exec,
-                             empleadoservice.ModificarEmpleado.create_and_exec,
-                             empleadoservice.ConsultarEmpleado.create_and_exec])
+                            [empleado.AgregarEmpleado.create_and_exec,
+                             empleado.ModificarEmpleado.create_and_exec,
+                             empleado.ConsultarEmpleado.create_and_exec])
 
             self.create_tab(3, ["Crear Cliente", "Actualizar Cliente", "Buscar Cliente"],
                             "Cliente", "img/cliente.png", "Gestión de Clientes",
-                            [clienteservice.AgregarCliente.create_and_exec,
-                             clienteservice.ModificarCliente.create_and_exec,
-                             clienteservice.ConsultarCliente.create_and_exec])
+                            [cliente.AgregarCliente.create_and_exec,
+                             cliente.ModificarCliente.create_and_exec,
+                             cliente.ConsultarCliente.create_and_exec])
 
         elif role == "tecnico":
 
+            self.create_tab(3, ["Crear Ticket de Servicio", "Actualizar Ticket de Servicio",
+                                "Buscar Ticket de Servicio"],
+                            "Ticket Servicio", "img/ticket.png", "Gestión de Tickets de Servicio",
+                            [ticketservicio.AgregarTicketServicio.create_and_exec,
+                             ticketservicio.ModificarTicketServicio.create_and_exec,
+                             ticketservicio.ConsultarTicketServicio.create_and_exec])
+
+            self.create_tab(3, ["Crear Ticket de Respuesto", "Actualizar Ticket de Repuesto",
+                                "Buscar Ticket de Repuesto"],
+                            "Ticket Repuesto", "img/ticket.png", "Gestión de Tickets de Repuesto",
+                            [ticketrepuesto.AgregarTicketRespuesto.create_and_exec,
+                             ticketrepuesto.ModificarTicketRespuesto.create_and_exec,
+                             ticketrepuesto.ConsultarTicketRepuesto.create_and_exec])
+
             self.create_tab(1, ["Buscar Repuesto"],
                             "Repuesto", "img/repuesto.png", "Gestión de Repuestos",
-                            [repuestoservice.ConsultarRepuesto.create_and_exec])
+                            [repuesto.ConsultarRepuesto.create_and_exec])
 
             self.create_tab(3, ["Crear Servicio", "Actualizar Servicio", "Buscar Servicio"],
                             "Servicio", "img/servicio.png", "Gestión de Servicios",
-                            [servicioservice.AgregarServicio.create_and_exec,
-                             servicioservice.ModificarServicio.create_and_exec,
-                             servicioservice.ConsultarServicio.create_and_exec])
+                            [servicio.AgregarServicio.create_and_exec,
+                             servicio.ModificarServicio.create_and_exec,
+                             servicio.ConsultarServicio.create_and_exec])
 
         elif role == "inventario":
             self.create_tab(3, ["Crear Repuesto", "Actualizar Repuesto", "Buscar Repuesto"],
                             "Repuesto", "img/repuesto.png", "Gestión de Repuestos",
-                            [repuestoservice.AgregarRepuesto.create_and_exec,
-                             repuestoservice.ModificarRepuesto.create_and_exec,
-                             repuestoservice.ConsultarRepuesto.create_and_exec])
+                            [repuesto.AgregarRepuesto.create_and_exec,
+                             repuesto.ModificarRepuesto.create_and_exec,
+                             repuesto.ConsultarRepuesto.create_and_exec])
 
         elif role == "recepcionista":
 
-            self.create_tab(3, ["Crear Ticket",  "Actualizar Ticket", "Buscar Ticket"],
-                            "Ticket", "img/ticket.png", "Gestión de Tickets",
-                            [ticketservice.AgregarTicket.create_and_exec,
-                             ticketservice.ModificarTicket.create_and_exec,
-                             ticketservice.ConsultarTicket.create_and_exec])
+            self.create_tab(3, ["Crear Ticket de Servicio",  "Actualizar Ticket de Servicio",
+                                "Buscar Ticket de Servicio"], "Ticket Servicio", "img/ticket.png",
+                            "Gestión de Tickets de Servicio",
+                            [ticketservicio.AgregarTicketServicio.create_and_exec,
+                             ticketservicio.ModificarTicketServicio.create_and_exec,
+                             ticketservicio.ConsultarTicketServicio.create_and_exec])
+
+            self.create_tab(3, ["Crear Ticket de Respuesto", "Actualizar Ticket de Repuesto",
+                                "Buscar Ticket de Repuesto"],
+                            "Ticket Repuesto", "img/ticket.png", "Gestión de Tickets de Repuesto",
+                            [ticketrepuesto.AgregarTicketRespuesto.create_and_exec,
+                             ticketrepuesto.ModificarTicketRespuesto.create_and_exec,
+                             ticketrepuesto.ConsultarTicketRepuesto.create_and_exec])
 
             self.create_tab(3, ["Crear Cliente", "Actualizar Cliente", "Buscar Cliente"],
                             "Cliente", "img/cliente.png", "Gestión de Clientes",
-                            [clienteservice.AgregarCliente.create_and_exec,
-                             clienteservice.ModificarCliente.create_and_exec,
-                             clienteservice.ConsultarCliente.create_and_exec])
+                            [cliente.AgregarCliente.create_and_exec,
+                             cliente.ModificarCliente.create_and_exec,
+                             cliente.ConsultarCliente.create_and_exec])
 
     def closeEvent(self, event):
         reply = QMessageBox.question(

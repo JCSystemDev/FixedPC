@@ -1,8 +1,8 @@
-from formwindow import ConsultarFormularioWindow, ModificarFormularioWindow, BorrarFormularioWindow, \
-    AgregarFormularioWindow
+from formwindow import Buscar, Actualizar, Eliminar, \
+    Crear
 
 
-class AgregarRepuesto(AgregarFormularioWindow):
+class AgregarRepuesto(Crear):
     def __init__(self):
         super().__init__()
         self.setFixedSize(350, 700)
@@ -22,7 +22,7 @@ class AgregarRepuesto(AgregarFormularioWindow):
         form.exec_()
 
 
-class BorrarRepuesto(BorrarFormularioWindow):
+class BorrarRepuesto(Eliminar):
     def __init__(self):
         super().__init__()
         self.set_title_text("Eliminar Repuesto")
@@ -43,7 +43,7 @@ class BorrarRepuesto(BorrarFormularioWindow):
         form.exec_()
 
 
-class ModificarRepuesto(ModificarFormularioWindow):
+class ModificarRepuesto(Actualizar):
     def __init__(self):
         super().__init__()
         self.set_title_text("Actualizar Respuesto")
@@ -64,7 +64,7 @@ class ModificarRepuesto(ModificarFormularioWindow):
         form.exec_()
 
 
-class ConsultarRepuesto(ConsultarFormularioWindow):
+class ConsultarRepuesto(Buscar):
     def __init__(self):
         super().__init__()
         self.setFixedSize(300, 400)

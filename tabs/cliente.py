@@ -1,8 +1,8 @@
-from formwindow import ConsultarFormularioWindow, ModificarFormularioWindow, BorrarFormularioWindow, \
-    AgregarFormularioWindow
+from formwindow import Buscar, Actualizar, Eliminar, \
+    Crear
 
 
-class AgregarCliente(AgregarFormularioWindow):
+class AgregarCliente(Crear):
     def __init__(self):
         super().__init__()
         self.setFixedSize(350, 700)
@@ -24,7 +24,7 @@ class AgregarCliente(AgregarFormularioWindow):
         form.exec_()
 
 
-class BorrarCliente(BorrarFormularioWindow):
+class BorrarCliente(Eliminar):
     def __init__(self):
         super().__init__()
         self.set_title_text("Eliminar Cliente")
@@ -46,7 +46,7 @@ class BorrarCliente(BorrarFormularioWindow):
         form.exec_()
 
 
-class ModificarCliente(ModificarFormularioWindow):
+class ModificarCliente(Actualizar):
     def __init__(self):
         super().__init__()
         self.set_title_text("Actualizar Cliente")
@@ -68,7 +68,7 @@ class ModificarCliente(ModificarFormularioWindow):
         form.exec_()
 
 
-class ConsultarCliente(ConsultarFormularioWindow):
+class ConsultarCliente(Buscar):
     def __init__(self):
         super().__init__()
         self.setFixedSize(300, 400)
