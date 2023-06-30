@@ -13,7 +13,7 @@
 * Trabajadores
 * Inventario
 * Servicios
-* Finanzas
+* Faturaciones
 
 ### Base de datos
 * Tipo de base de datos
