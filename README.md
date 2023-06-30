@@ -25,7 +25,7 @@
 * Qt
 
 ### Equipo de desarrollo
-* Diego Cornejo
-* Danilo Garrido
-* Juan Carlos Gallardo
-* Angelo Marchant
+* Diego Cornejo (Base de datos)
+* Danilo Garrido (Documentación)
+* Juan Carlos Gallardo (Programador)
+* Angelo Marchant (Pruebas)
