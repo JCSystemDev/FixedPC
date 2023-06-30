@@ -5,7 +5,7 @@
 * Personal Administrativo
 * Personal de recepción
 * Personal técnico
-* Personal de bodega
+* Personal de inventario
 
 ### Sub-sistemas
 * Usuarios
