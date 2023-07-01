@@ -34,4 +34,3 @@ class DAO:
     def cerrar_conexion(self):
         self.cursor.close()
         self.cnx.close()
-

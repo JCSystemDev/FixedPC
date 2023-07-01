@@ -9,7 +9,7 @@ from tabs import ticketservicio, servicio, reporte, repuesto, cuenta, cliente, e
 
 
 class MainWindow(QMainWindow):
-    def __init__(self, role):
+    def __init__(self, username, role):
         super().__init__()
 
         self.setWindowTitle("Main - Fixed PC")
@@ -36,7 +36,7 @@ class MainWindow(QMainWindow):
 
         self.setCentralWidget(widget_container)
 
-    def create_widget(self, num_buttons, button_names, image_path, description_text, button_functions):
+    def create_widget(self, num_buttons, button_names, name, image_path, description_text, button_functions):
 
         button_names = button_names[:num_buttons]
 
