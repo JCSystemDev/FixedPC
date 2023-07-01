@@ -9,7 +9,7 @@ from tabs import ticketservicio, servicio, reporte, repuesto, cuenta, cliente, e
 
 
 class MainWindow(QMainWindow):
-    def __init__(self, username, role):
+    def __init__(self, role):
         super().__init__()
 
         self.setWindowTitle("Main - Fixed PC")
@@ -36,7 +36,7 @@ class MainWindow(QMainWindow):
 
         self.setCentralWidget(widget_container)
 
-    def create_widget(self, num_buttons, button_names, name, image_path, description_text, button_functions):
+    def create_widget(self, num_buttons, button_names, image_path, description_text, button_functions):
 
         button_names = button_names[:num_buttons]
 
@@ -170,7 +170,7 @@ class MainWindow(QMainWindow):
             self.create_tab(3, ["Crear Ticket de Respuesto", "Actualizar Ticket de Repuesto",
                                 "Buscar Ticket de Repuesto"],
                             "Ticket Repuesto", "img/ticket.png", "Gestión de Tickets de Repuesto",
-                            [ticketrepuesto.AgregarTicketRespuesto.create_and_exec,
+                            [ticketrepuesto.AgregarTicketRepuesto.create_and_exec,
                              ticketrepuesto.ModificarTicketRespuesto.create_and_exec,
                              ticketrepuesto.ConsultarTicketRepuesto.create_and_exec])
 
@@ -193,17 +193,16 @@ class MainWindow(QMainWindow):
 
         elif role == "recepcionista":
 
-            self.create_tab(3, ["Crear Ticket de Servicio",  "Actualizar Ticket de Servicio",
-                                "Buscar Ticket de Servicio"], "Ticket Servicio", "img/ticket.png",
+            self.create_tab(2, ["Crear Ticket de Servicio", "Buscar Ticket de Servicio"],
+                            "Ticket Servicio", "img/ticket.png",
                             "Gestión de Tickets de Servicio",
                             [ticketservicio.AgregarTicketServicio.create_and_exec,
-                             ticketservicio.ModificarTicketServicio.create_and_exec,
                              ticketservicio.ConsultarTicketServicio.create_and_exec])
 
             self.create_tab(3, ["Crear Ticket de Respuesto", "Actualizar Ticket de Repuesto",
                                 "Buscar Ticket de Repuesto"],
                             "Ticket Repuesto", "img/ticket.png", "Gestión de Tickets de Repuesto",
-                            [ticketrepuesto.AgregarTicketRespuesto.create_and_exec,
+                            [ticketrepuesto.AgregarTicketRepuesto.create_and_exec,
                              ticketrepuesto.ModificarTicketRespuesto.create_and_exec,
                              ticketrepuesto.ConsultarTicketRepuesto.create_and_exec])
 

@@ -16,7 +16,7 @@ class AgregarEmpleado(Crear):
         self.campos_layout.setContentsMargins(60, 20, 60, 20)
         self.layout.setSpacing(10)
         self.setLayout(self.layout)
-        self.clear_fields
+        self.clear_fields()
 
     def create_and_exec(self):
         form = AgregarEmpleado()

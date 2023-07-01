@@ -1,6 +1,6 @@
 import hashlib
 from datetime import datetime
-
+import os
 import qdarkstyle
 from PySide6.QtGui import QFont, QIcon, QPixmap
 from PySide6.QtWidgets import QDialog, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLineEdit, QMessageBox, \
@@ -9,7 +9,7 @@ from PySide6.QtCore import Qt
 from fpdf import FPDF
 
 import dao
-import notifications
+# import notifications
 
 
 class FormWindow(QDialog):
@@ -29,6 +29,7 @@ class FormWindow(QDialog):
         self.pixmap = self.pixmap.scaled(128, 128)
         self.image_label.setPixmap(self.pixmap)
         self.layout.addWidget(self.image_label, alignment=Qt.AlignmentFlag.AlignCenter)
+        self.ticket_state_list = ["abierto", "pendiente", "cerrado"]
         self.setLayout(self.layout)
 
     def set_title_text(self, text):
@@ -339,8 +340,9 @@ class Facturacion(QDialog):
         self.total_neto = 0
         self.code_customer = 0
         self.customer_name = ""
+        self.phone_customer = ""
         self.replace_chars = "'(),"
-        self.replace_table = str.maketrans("","", self.replace_chars)
+        self.replace_table = str.maketrans("", "", self.replace_chars)
         self.date_today = datetime.now()
         self.date_today = self.date_today.strftime("%d-%m-%Y")
         self.total_iva = 0
@@ -360,14 +362,14 @@ class Facturacion(QDialog):
         # Realizar consulta para obtener los datos de ticketservicio y ticketrepuesto
         fdao = dao.DAO()
         query_serv = f"SELECT s.cod_serv, s.name_serv, s.price_serv " \
-                f"FROM ticketservicio ts " \
-                f"JOIN servicio s ON ts.cod_serv = s.cod_serv " \
-                f"WHERE ts.cod_fact = {self.code} AND ts.state_ticket = 'cerrado' "
+                     "FROM ticketservicio ts " \
+                     "JOIN servicio s ON ts.cod_serv = s.cod_serv " \
+                     "WHERE ts.cod_fact = {self.code} AND ts.state_ticket = 'cerrado' "
         result_serv = fdao.mostrar(query_serv)
         query_rep = f"SELECT s.cod_rep, s.name_rep, s.price_rep " \
-                f"FROM ticketrepuesto ts " \
-                f"JOIN repuesto s ON ts.cod_rep = s.cod_rep " \
-                f"WHERE ts.cod_fact = {self.code} AND ts.state_ticket = 'cerrado' "
+                    "FROM ticketrepuesto ts " \
+                    "JOIN repuesto s ON ts.cod_rep = s.cod_rep " \
+                    "WHERE ts.cod_fact = {self.code} AND ts.state_ticket = 'cerrado' "
         result_rep = fdao.mostrar(query_rep)
         query_customer = f"SELECT CONCAT(c.name_customer, ' ', c.lastname_customer) AS nombre_customer " \
                          f"FROM ticketservicio ts JOIN cliente c ON ts.cod_customer = c.cod_customer " \
@@ -375,6 +377,15 @@ class Facturacion(QDialog):
         result_customer = fdao.mostrar(query_customer)
         self.customer_name = str(result_customer[0])
         self.customer_name = self.customer_name.translate(self.replace_table)
+
+        query_phone = f"SELECT c.phone_customer FROM ticketservicio ts JOIN cliente c " \
+                      f"ON ts.cod_customer = c.cod_customer WHERE ts.cod_fact = {self.code} "
+        result_phone = fdao.mostrar(query_phone)
+
+        self.phone_customer = str(result_phone[0])
+        self.phone_customer = self.phone_customer.translate(self.replace_table)
+        print(self.phone_customer)
+
         fdao.cerrar_conexion()
 
         if not result_serv and not result_rep:
@@ -415,7 +426,6 @@ class Facturacion(QDialog):
         # Agregar los datos de los repuestos
         self.add_data_to_pdf(pdf, result_rep)
         total_neto_rep = self.total_neto
-        total_neto_rep = self.total_neto
 
         # Calcular totales
         pdf.ln(10)
@@ -432,15 +442,18 @@ class Facturacion(QDialog):
         pdf.cell(0, 10, "FIXED PC - 2023", ln=True, align="C")
 
         # Guardar el documento PDF
+        pdf_directory = "facturaciones"
         pdf_filename = f"{self.code}.pdf"
-        pdf.output(pdf_filename)
+        pdf_path = os.path.join(pdf_directory, pdf_filename)
+        os.makedirs(pdf_directory, exist_ok=True)
+        pdf.output(pdf_path)
 
         fdao = dao.DAO()
         query = f"INSERT INTO factura " \
                 f"(cod_fact, name_customer, valor_total_neto, valor_total_iva, valor_total, fecha_fact) " \
                 f"VALUES ({self.code}, '{self.customer_name}', {total_neto_serv + total_neto_rep}, {self.total_iva}, " \
                 f"{int(self.total_iva + total_neto_serv + total_neto_rep)}, '{datetime.now()}')"
-        result = fdao.crear(query)
+        fdao.crear(query)
         fdao.cerrar_conexion()
         QMessageBox.information(self, "Información", f"Se ha creado el documento PDF: {pdf_filename}")
         hora_actual = datetime.now()
@@ -448,10 +461,15 @@ class Facturacion(QDialog):
         minuto = hora_actual.minute + 1
         print(hora, minuto)
 
-        # Enviar el mensaje 1 minuto después de la hora actual
-        notifications.enviar_mensaje_despues(f"Hola {self.customer_name}, su pedido esta listo para retiro." \
-                                             f" Su número de facturación es {self.code} y el valor total es por " \
-                                             f"${int(self.total_iva + total_neto_serv + total_neto_rep)}", hora, minuto)
+        # Enviar el mensaje 1 minuto después de la hora actual (Por ahora no se usará)
+        """
+        notifications.enviar_mensaje_despues(self.phone_customer, f"Hola {self.customer_name},"
+                                                           f" su pedido esta listo para retiro." \
+                                                           f" Su número de facturación es {self.code}"
+                                                           f" y el valor total es por " \
+                                                           f"${int(self.total_iva + total_neto_serv + total_neto_rep)}"
+                                             , hora, minuto)
+        """
 
     def add_data_to_pdf(self, pdf, data_list):
         pdf.set_font(family="Arial", size=12)

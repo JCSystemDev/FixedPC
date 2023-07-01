@@ -1,7 +1,7 @@
 import hashlib
 import mysql
 import qdarkstyle
-from PySide6.QtGui import QIcon, QPixmap, Qt, QPalette, QColor
+from PySide6.QtGui import QIcon, QPixmap, Qt
 from PySide6.QtWidgets import QMainWindow, QWidget, QVBoxLayout, QLabel, QLineEdit, QPushButton, QMessageBox
 
 import dao
@@ -65,7 +65,7 @@ class LoginWindow(QMainWindow):
         # o sistema de autenticación
         try:
             daologin = dao.DAO()
-            result = daologin.buscar(f"SELECT cod_user, clave_user, rol FROM cuenta WHERE cod_user = '{username}' " \
+            result = daologin.buscar(f"SELECT cod_user, clave_user, rol FROM cuenta WHERE cod_user = '{username}'"
                                      f"AND clave_user = '{password}'")
 
             if result:
@@ -82,4 +82,3 @@ class LoginWindow(QMainWindow):
             daologin.cerrar_conexion()
         except mysql.connector.Error as err:
             QMessageBox.warning(self, "Error de conexión", f"Error al conectar con la base de datos: {err}")
-

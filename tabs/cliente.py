@@ -17,7 +17,7 @@ class AgregarCliente(Crear):
         self.campos_layout.setContentsMargins(60, 30, 60, 30)
         self.layout.setSpacing(10)
         self.setLayout(self.layout)
-        self.clear_fields
+        self.clear_fields()
 
     def create_and_exec(self):
         form = AgregarCliente()

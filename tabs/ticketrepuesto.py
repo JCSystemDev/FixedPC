@@ -15,7 +15,7 @@ class AgregarTicketRepuesto(Crear):
         self.campos_layout.setContentsMargins(60, 20, 60, 20)
         self.layout.setSpacing(10)
         self.setLayout(self.layout)
-        self.clear_fields
+        self.clear_fields()
 
     def create_and_exec(self):
         form = AgregarTicketRepuesto()
@@ -73,7 +73,7 @@ class ConsultarTicketRepuesto(Buscar):
         self.headers = ["Código", "Estado", "Código de cliente", "Código de facturación", "Código de repuesto"]
         self.columns = ["cod_ticket", "state_ticket", "cod_customer", "cod_fact", "cod_rep"]
         self.columns_table = 5
-        self.filter_combo.addItems(["Código", "Estado", "Técnico"])
+        self.filter_combo.addItems(["Código", "Estado", "Cliente"])
         self.mapping_columns = {
             "Código": "cod_ticket",
             "Estado": "state_ticket",

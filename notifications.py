@@ -1,8 +1,6 @@
 import pywhatkit
-import datetime
-import time
 
 
-def enviar_mensaje_despues(mensaje, hora, minuto):
+def enviar_mensaje_despues(numero, mensaje, hora, minuto):
     # Enviar el mensaje
-    pywhatkit.sendwhatmsg("+56958997028", mensaje, hora, minuto)
+    pywhatkit.sendwhatmsg(numero, mensaje, hora, minuto)
