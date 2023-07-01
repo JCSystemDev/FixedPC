@@ -22,7 +22,7 @@
 ### Plataformas utilizadas 
 * Python
 * MySQL
-* Qt
+* Qt(Pyside6)
 
 ### Equipo de desarrollo
 * Diego Cornejo (Base de datos)
