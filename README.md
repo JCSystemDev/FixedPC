@@ -5,7 +5,7 @@
 * Personal Administrativo
 * Personal de recepción
 * Personal técnico
-* Personal de bodega
+* Personal de inventario
 
 ### Sub-sistemas
 * Usuarios
@@ -13,7 +13,7 @@
 * Trabajadores
 * Inventario
 * Servicios
-* Finanzas
+* Facturaciones
 
 ### Base de datos
 * Tipo de base de datos
@@ -22,10 +22,10 @@
 ### Plataformas utilizadas 
 * Python
 * MySQL
-* Qt
+* Qt(Pyside6)
 
 ### Equipo de desarrollo
-* Diego Cornejo
-* Danilo Garrido
-* Juan Carlos Gallardo
-* Angelo Marchant
+* Diego Cornejo (Base de datos)
+* Danilo Garrido (Documentación)
+* Juan Carlos Gallardo (Programador)
+* Angelo Marchant (Pruebas)
