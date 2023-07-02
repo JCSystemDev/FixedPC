@@ -8,8 +8,8 @@ class AgregarEmpleado(Crear):
         self.setFixedSize(350, 700)
         self.title_label.setText("Crear Empleado")
         self.table_name = 'empleado'
-        self.campos = ["Nombre", "Apellido", "Cargo", "Rut", "Fecha de ingreso", "Fecha de salida"]
-        self.columnas = ["cod_emp", "name_emp", "lastname_emp", "job_title", "rut_emp", "hire_date", "dep_date"]
+        self.campos = ["Nombre", "Apellido", "Cargo", "Rut", "Fecha de ingreso"]
+        self.columnas = ["cod_emp", "name_emp", "lastname_emp", "job_title", "rut_emp", "hire_date"]
         self.field_list = []
         self.autoincrement = True
         self.create_fields(self.campos, self.campos_layout)

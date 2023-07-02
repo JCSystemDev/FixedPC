@@ -1,4 +1,5 @@
 import hashlib
+import re
 from datetime import datetime
 import os
 import qdarkstyle
@@ -78,24 +79,93 @@ class Crear(FormWindow):
     def create_fields(self, campos, layout):
         for campo in campos:
             label = QLabel(campo)
-            field = QLineEdit()
-            if campo == "Contraseña":
-                field.setEchoMode(QLineEdit.Password)
+            field = None
+            if campo == "Estado del Ticket":
+                field = QComboBox()
+                field.addItems(self.ticket_state_list)
+            elif campo == "Código de Cliente":
+                field = QComboBox()
+                self.populate_customer_combobox(field)
+            elif campo == "Código de Empleado":
+                field = QComboBox()
+                self.populate_employee_combobox(field)
+            elif campo == "Código de Servicio":
+                field = QComboBox()
+                self.populate_service_combobox(field)
+            elif campo == "Código de Repuesto":
+                field = QComboBox()
+                self.populate_repuesto_combobox(field)
+            else:
+                field = QLineEdit()
+                if campo == "Contraseña":
+                    field.setEchoMode(QLineEdit.Password)
             layout.addWidget(label)
             layout.addWidget(field)
             self.field_list.append(field)
-            field.textChanged.connect(self.update_field_values)
+            if isinstance(field, QLineEdit):
+                field.textChanged.connect(self.update_field_values)
 
     def update_field_values(self):
-        self.field_values = [field.text() for field in self.field_list]
+        self.field_values = [field.currentText() if isinstance(field, QComboBox) else field.text() for field in
+                             self.field_list]
 
     def clear_fields(self):
         for field in self.field_list:
-            field.clear()
+            if isinstance(field, QLineEdit):
+                field.clear()
+            elif isinstance(field, QComboBox):
+                field.setCurrentIndex(0)
+
+    def populate_customer_combobox(self, combobox):
+        fdao = dao.DAO()
+        query = "SELECT cod_customer, name_customer, lastname_customer FROM cliente"
+        result = fdao.mostrar(query)
+        fdao.cerrar_conexion()
+
+        for row in result:
+            cod_customer = row[0]
+            name_customer = row[1]
+            lastname_customer = row[2]
+            combobox.addItem(f"{cod_customer} - {name_customer} {lastname_customer}")
+
+    def populate_employee_combobox(self, combobox):
+        fdao = dao.DAO()
+        query = "SELECT cod_emp, name_emp, lastname_emp FROM empleado WHERE job_title = 'Técnico'"
+        result = fdao.mostrar(query)
+        fdao.cerrar_conexion()
+
+        for row in result:
+            cod_emp = row[0]
+            name_emp = row[1]
+            lastname_emp = row[2]
+            combobox.addItem(f"{cod_emp} - {name_emp} {lastname_emp}")
+
+    def populate_service_combobox(self, combobox):
+        fdao = dao.DAO()
+        query = "SELECT cod_serv, name_serv FROM servicio"
+        result = fdao.mostrar(query)
+        fdao.cerrar_conexion()
+
+        for row in result:
+            cod_serv = row[0]
+            name_serv = row[1]
+            combobox.addItem(f"{cod_serv} - {name_serv}")
+
+    def populate_repuesto_combobox(self, combobox):
+        fdao = dao.DAO()
+        query = "SELECT cod_rep, name_rep FROM repuesto"
+        result = fdao.mostrar(query)
+        fdao.cerrar_conexion()
+
+        for row in result:
+            cod_rep = row[0]
+            name_rep = row[1]
+            combobox.addItem(f"{cod_rep} - {name_rep}")
 
     def insert_row(self):
         columns = self.columnas
         values = self.field_values
+        self.update_field_values()
 
         if columns[1] == "clave_user":
             values[1] = hashlib.sha256(values[1].encode('utf-8')).hexdigest()
@@ -108,9 +178,37 @@ class Crear(FormWindow):
             field_values = "','".join(values)
 
         # Verificar si algún campo está vacío
-        if len(self.field_values) < len(self.columnas):
+        if any(not value for value in self.field_values):
             QMessageBox.critical(self, "Error", "Todos los campos deben ser completados.")
             return
+
+        # Validar el formato del campo "Email de Cliente"
+        if "email_customer" in columns:
+            email_index = columns.index("email_customer")
+            email_value = values[email_index]
+            if not re.match(r"[^@]+@[^@]+\.[^@]+", email_value):
+                QMessageBox.critical(self, "Error", "Formato de correo electrónico inválido.")
+                return
+
+        # Validar las fechas "Fecha de contratación" y "Fecha de retiro"
+        if "hire_date" in columns:
+            fecha_contratacion_index = columns.index("hire_date")
+            fecha_contratacion_value = values[fecha_contratacion_index]
+            if not self.validar_fecha(fecha_contratacion_value):
+                QMessageBox.critical(self, "Error", "Fecha de contratación inválida.")
+                return
+
+        # Validar que algunos campos solo contengan letras
+        letras = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+        campos_letras = ["name_emp", "lastname_emp", "name_customer", "lastname_customer", "job_title", "rol",
+                         "cod_user"]
+        for campo in campos_letras:
+            if campo in columns:
+                campo_index = columns.index(campo)
+                campo_value = values[campo_index]
+                if any(letra not in letras for letra in campo_value):
+                    QMessageBox.critical(self, "Error", f"El campo ingresado solo debe contener letras.")
+                    return
 
         # Crear la consulta de inserción con los valores de los campos
         query = f"INSERT INTO {self.table_name} ({column_names}) VALUES ('{field_values}')"
@@ -121,9 +219,17 @@ class Crear(FormWindow):
             daof.crear(query)
             daof.cerrar_conexion()
             self.clear_fields()
-            QMessageBox.information(self, "", "El Documento se ha agregado correctamente.")
+            QMessageBox.information(self, "Éxito", "El Documento se ha agregado correctamente.")
         except Exception as e:
             QMessageBox.critical(self, "Error", f"No se pudo agregar el Documento.\nError: {str(e)}")
+
+    def validar_fecha(self, fecha):
+        try:
+            fecha_actual = datetime.now().date()
+            fecha_ingresada = datetime.strptime(fecha, "%Y-%m-%d").date()
+            return fecha_ingresada <= fecha_actual
+        except ValueError:
+            return False
 
 
 class Eliminar(FormWindow):
@@ -456,13 +562,15 @@ class Facturacion(QDialog):
         fdao.crear(query)
         fdao.cerrar_conexion()
         QMessageBox.information(self, "Información", f"Se ha creado el documento PDF: {pdf_filename}")
+
+        """
         hora_actual = datetime.now()
         hora = hora_actual.hour
         minuto = hora_actual.minute + 1
         print(hora, minuto)
 
         # Enviar el mensaje 1 minuto después de la hora actual (Por ahora no se usará)
-        """
+        
         notifications.enviar_mensaje_despues(self.phone_customer, f"Hola {self.customer_name},"
                                                            f" su pedido esta listo para retiro." \
                                                            f" Su número de facturación es {self.code}"
@@ -470,7 +578,7 @@ class Facturacion(QDialog):
                                                            f"${int(self.total_iva + total_neto_serv + total_neto_rep)}"
                                              , hora, minuto)
         """
-
+        
     def add_data_to_pdf(self, pdf, data_list):
         pdf.set_font(family="Arial", size=12)
         self.total_neto = 0

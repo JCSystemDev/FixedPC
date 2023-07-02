@@ -7,8 +7,8 @@ class AgregarTicketRepuesto(Crear):
         self.setFixedSize(350, 700)
         self.title_label.setText("Crear Ticket")
         self.table_name = 'ticketrepuesto'
-        self.campos = ["Estado del Ticket", "Código de Cliente", "Código de Facturación", "Código de Repuesto"]
-        self.columnas = ["cod_ticket", "state_ticket", "cod_customer", "cod_fact", "cod_rep"]
+        self.campos = ["Estado del Ticket", "Código de Cliente", "Código de Repuesto", "Código de Facturación"]
+        self.columnas = ["cod_ticket", "state_ticket", "cod_customer", "cod_rep", "cod_fact"]
         self.field_list = []
         self.autoincrement = True
         self.create_fields(self.campos, self.campos_layout)
