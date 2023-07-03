@@ -13,6 +13,7 @@ from fpdf import FPDF
 import dao
 # import notifications
 
+
 class FormWindow(QDialog):
     def __init__(self):
         super().__init__()
@@ -32,6 +33,9 @@ class FormWindow(QDialog):
         self.layout.addWidget(self.image_label, alignment=Qt.AlignmentFlag.AlignCenter)
         self.ticket_state_list = ["abierto", "pendiente", "cerrado"]
         self.role_list = ["administrador", "administrativo", "tecnico", "inventario", "recepcionista"]
+        self.letras = "abcdefghijklmnñopqrstuvwxyzABCDEFGHIJKLMNÑOPQRSTUVWXYZ"
+        self.campos_letras = ["name_emp", "lastname_emp", "name_customer", "lastname_customer", "job_title", "rol",
+                              "cod_user"]
         self.setLayout(self.layout)
 
     def set_title_text(self, text):
@@ -87,6 +91,9 @@ class FormWindow(QDialog):
             elif campo == "Código de Empleado":
                 field = QComboBox()
                 self.populate_employee_combobox(field)
+            elif campo == "Código de Técnico":
+                field = QComboBox()
+                self.populate_tecnico_combobox(field)
             elif campo == "Código de Servicio":
                 field = QComboBox()
                 self.populate_service_combobox(field)
@@ -118,9 +125,21 @@ class FormWindow(QDialog):
             lastname_customer = row[2]
             combobox.addItem(f"{cod_customer} - {name_customer} {lastname_customer}")
 
-    def populate_employee_combobox(self, combobox):
+    def populate_tecnico_combobox(self, combobox):
         fdao = dao.DAO()
         query = "SELECT cod_emp, name_emp, lastname_emp FROM empleado WHERE job_title = 'Técnico'"
+        result = fdao.mostrar(query)
+        fdao.cerrar_conexion()
+
+        for row in result:
+            cod_emp = row[0]
+            name_emp = row[1]
+            lastname_emp = row[2]
+            combobox.addItem(f"{cod_emp} - {name_emp} {lastname_emp}")
+
+    def populate_employee_combobox(self, combobox):
+        fdao = dao.DAO()
+        query = "SELECT cod_emp, name_emp, lastname_emp FROM empleado"
         result = fdao.mostrar(query)
         fdao.cerrar_conexion()
 
@@ -192,6 +211,7 @@ class Crear(FormWindow):
         columns = self.columnas
         values = self.field_values
 
+        #Si la columna es la contraseña. Se generá el cifrado.
         if columns[1] == "clave_user":
             values[1] = hashlib.sha256(values[1].encode('utf-8')).hexdigest()
 
@@ -223,22 +243,37 @@ class Crear(FormWindow):
                 QMessageBox.critical(self, "Error", "Fecha de contratación inválida.")
                 return
 
-        if "Teléfono" in columns:
-            telefono_index = columns.index("Teléfono")
+        if "phone_customer" in columns:
+            telefono_index = columns.index("phone_customer")
             telefono_value = values[telefono_index]
             if not re.match(r"\+569\d{8}", telefono_value):
                 QMessageBox.critical(self, "Error", "Formato de teléfono inválido. Debe ser +569 seguido de 8 números.")
                 return
 
+        # Validar el formato del campo "RUT"
+        if "rut_customer" in columns:
+            rut_index = columns.index("rut_customer")
+            rut_value = values[rut_index]
+            if not re.match(r"\d{7,8}-[0-9Kk]", rut_value):
+                QMessageBox.critical(self, "Error", "Formato de RUT inválido. Debe tener 7 a 8 dígitos seguidos "
+                                                    "de un guion y un dígito o la letra 'K'.")
+                return
+
+        # Validar el formato del campo "RUT"
+        if "rut_emp" in columns:
+            rut_index = columns.index("rut_emp")
+            rut_value = values[rut_index]
+            if not re.match(r"\d{7,8}-[0-9Kk]", rut_value):
+                QMessageBox.critical(self, "Error", "Formato de RUT inválido. Debe tener 7 a 8 dígitos seguidos de un "
+                                                    "guion y un dígito o la letra 'K'.")
+                return
+
         # Validar que algunos campos solo contengan letras
-        letras = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        campos_letras = ["name_emp", "lastname_emp", "name_customer", "lastname_customer", "job_title", "rol",
-                         "cod_user"]
-        for campo in campos_letras:
+        for campo in self.campos_letras:
             if campo in columns:
                 campo_index = columns.index(campo)
                 campo_value = values[campo_index]
-                if any(letra not in letras for letra in campo_value):
+                if any(letra not in self.letras for letra in campo_value):
                     QMessageBox.critical(self, "Error", f"El campo ingresado solo debe contener letras.")
                     return
 
@@ -379,6 +414,9 @@ class Actualizar(FormWindow):
                         elif header == "Código de Empleado":
                             input_field = QComboBox()
                             self.populate_employee_combobox(input_field)
+                        elif header == "Código de Técnico":
+                            input_field = QComboBox()
+                            self.populate_tecnico_combobox(input_field)
                         elif header == "Código de Servicio":
                             input_field = QComboBox()
                             self.populate_service_combobox(input_field)
@@ -390,29 +428,27 @@ class Actualizar(FormWindow):
                             self.populate_facturacion_combobox(input_field)
                         else:
                             input_field = QLineEdit()
+
                             if header == "Contraseña":
                                 input_field.setEchoMode(QLineEdit.Password)
                         form_layout.addWidget(label)
                         form_layout.addWidget(input_field)
                         column_values[column] = input_field
                         new_values.append(input_field)
-
                     button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
                     button_box.accepted.connect(form.accept)
                     button_box.rejected.connect(form.reject)
                     form_layout.addWidget(button_box)
-
                     if form.exec_() == QDialog.Accepted:
                         # Obtener los nuevos valores ingresados en el formulario
                         new_values = [
                             column_values[column].currentText() if isinstance(column_values[column], QComboBox) else
                             column_values[column].text() for column in column_values]
                         if any(new_values):  # Verificar si se han ingresado datos para actualizar
-                            if self.columns[1] == "clave_user":
-                                pass
                             fdao = dao.DAO()
                             update_columns = ", ".join(f"{column} = %s" for column in column_values)
-                            query_actualizar = f"UPDATE {self.table_name} SET {update_columns} WHERE {self.columns[0]} = %s"
+                            query_actualizar = f"UPDATE {self.table_name} SET {update_columns} " \
+                                               f"WHERE {self.columns[0]} = %s"
                             new_values.append(codigo_modificar)
                             fdao.modificar(query_actualizar, new_values)
                             fdao.cerrar_conexion()
@@ -436,7 +472,6 @@ class Actualizar(FormWindow):
             QMessageBox.warning(self, "Error", "Ingrese un código válido.")
 
         self.codigo_modificar.clear()
-
 
 
 class Buscar(FormWindow):

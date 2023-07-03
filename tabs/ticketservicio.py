@@ -8,7 +8,7 @@ class AgregarTicketServicio(Crear):
         self.setFixedSize(350, 700)
         self.title_label.setText("Crear Ticket de Servicio")
         self.table_name = 'ticketservicio'
-        self.campos = ["Estado del Ticket", "Código de Cliente", "Código de Empleado", "Código de Servicio",
+        self.campos = ["Estado del Ticket", "Código de Cliente", "Código de Técnico", "Código de Servicio",
                        "Código de Facturación"]
         self.columnas = ["cod_ticket", "state_ticket", "cod_customer", "cod_emp", "cod_serv", "cod_fact"]
         self.field_list = []
@@ -31,7 +31,7 @@ class BorrarTicketServicio(Eliminar):
         self.table_name = "ticketservicio"
         self.table_widget.setColumnCount(6)
         self.layout.addWidget(self.table_widget)
-        self.headers = ["Código", "Estado del Ticket", "Código de Cliente", "Código de Empleado", "Código de Facturación",
+        self.headers = ["Código", "Estado del Ticket", "Código de Cliente", "Código de Técnico", "Código de Facturación",
                         "Código de Servicio"]
         self.columns = ["cod_ticket", "state_ticket", "cod_customer", "cod_emp", "cod_fact", "cod_serv"]
         self.table_widget.setHorizontalHeaderLabels(self.headers)
@@ -53,7 +53,7 @@ class ModificarTicketServicio(Actualizar):
         self.table_name = "ticketservicio"
         self.table_widget.setColumnCount(6)
         self.layout.addWidget(self.table_widget)
-        self.headers = ["Codigo", "Estado del Ticket", "Código de Cliente", "Código de Empleado", "Código de Facturación",
+        self.headers = ["Codigo", "Estado del Ticket", "Código de Cliente", "Código de Técnico", "Código de Facturación",
                         "Código de Servicio"]
         self.columns = ["cod_ticket", "state_ticket", "cod_customer", "cod_emp", "cod_fact", "cod_serv"]
         self.table_widget.setHorizontalHeaderLabels(self.headers)
@@ -74,8 +74,8 @@ class ConsultarTicketServicio(Buscar):
         self.setFixedSize(300, 400)
         self.set_title_text("Buscar Ticket de Servicio")
         self.table_name = "ticketservicio"
-        self.headers = ["Código", "Estado del Ticket", "Código de Cliente", "Código de Técnico Asignado", "Código de Facturación",
-                        "Código de Servicio", "Código de Repuesto"]
+        self.headers = ["Código", "Estado del Ticket", "Código de Cliente", "Código de Técnico",
+                        "Código de Facturación", "Código de Servicio", "Código de Repuesto"]
         self.columns = ["cod_ticket", "state_ticket", "cod_customer", "cod_emp", "cod_fact", "cod_serv"]
         self.columns_table = 6
         self.filter_combo.addItems(["Código", "Estado", "Técnico"])
