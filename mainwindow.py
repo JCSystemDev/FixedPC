@@ -83,7 +83,7 @@ class MainWindow(QMainWindow):
         self.tab_widget.addTab(widget, name)
 
     def check_user_role(self, role):
-        if role == "administrador":
+        if role == "administrador": # rol administrador tiene acceso a todos los módulos
 
             self.create_tab(4, ["Crear Ticket de Servicio", "Eliminar Ticket de Servicio",
                                 "Actualizar Ticket de Servicio", "Buscar Ticket de Servicio"],
@@ -141,7 +141,7 @@ class MainWindow(QMainWindow):
                             [formwindow.CrearFacturacion,
                              formwindow.Facturacion.create_and_exec])
 
-        elif role == "administrativo":
+        elif role == "administrativo": #  rol administrativo tiene acceso módulo cliente y empleado
 
             self.create_tab(3, ["Crear Empleado", "Actualizar Empleado", "Buscar Empleado"],
                             "Empleado", "img/empleado.png", "Gestión de Empleados",
@@ -155,7 +155,7 @@ class MainWindow(QMainWindow):
                              cliente.ModificarCliente.create_and_exec,
                              cliente.ConsultarCliente.create_and_exec])
 
-        elif role == "tecnico":
+        elif role == "tecnico": # rol tecnico tiene acceso a los módulos de tickets, repuesto y servicio
 
             self.create_tab(3, ["Crear Ticket de Servicio", "Actualizar Ticket de Servicio",
                                 "Buscar Ticket de Servicio"],
@@ -181,14 +181,14 @@ class MainWindow(QMainWindow):
                              servicio.ModificarServicio.create_and_exec,
                              servicio.ConsultarServicio.create_and_exec])
 
-        elif role == "inventario":
+        elif role == "inventario":  # rol administrador tiene acceso al módulo repuesto
             self.create_tab(3, ["Crear Repuesto", "Actualizar Repuesto", "Buscar Repuesto"],
                             "Repuesto", "img/repuesto.png", "Gestión de Repuestos",
                             [repuesto.AgregarRepuesto.create_and_exec,
                              repuesto.ModificarRepuesto.create_and_exec,
                              repuesto.ConsultarRepuesto.create_and_exec])
 
-        elif role == "recepcionista":
+        elif role == "recepcionista": # rol recepcionista tiene acceso a los módulo de ticket y cliente
 
             self.create_tab(2, ["Crear Ticket de Servicio", "Buscar Ticket de Servicio"],
                             "Ticket Servicio", "img/ticket.png",

@@ -8,9 +8,10 @@
 * Personal de inventario
 
 ### Sub-sistemas
-* Usuarios
+* Cuenta
+* Clientes
 * Tickets 
-* Trabajadores
+* Empleados
 * Inventario
 * Servicios
 * Facturaciones
