@@ -31,6 +31,7 @@ class FormWindow(QDialog):
         self.image_label.setPixmap(self.pixmap)
         self.layout.addWidget(self.image_label, alignment=Qt.AlignmentFlag.AlignCenter)
         self.ticket_state_list = ["abierto", "pendiente", "cerrado"]
+        self.role_list = ["administrador", "administrativo", "tecnico", "inventario", "recepcionista"]
         self.setLayout(self.layout)
 
     def set_title_text(self, text):
@@ -77,6 +78,9 @@ class FormWindow(QDialog):
             if campo == "Estado del Ticket":
                 field = QComboBox()
                 field.addItems(self.ticket_state_list)
+            elif campo == "Rol":
+                field = QComboBox()
+                field.addItems(self.role_list)
             elif campo == "Código de Cliente":
                 field = QComboBox()
                 self.populate_customer_combobox(field)
@@ -366,6 +370,9 @@ class Actualizar(FormWindow):
                         if header == "Estado del Ticket":
                             input_field = QComboBox()
                             input_field.addItems(self.ticket_state_list)
+                        elif header == "Rol":
+                            input_field = QComboBox()
+                            input_field.addItems(self.role_list)
                         elif header == "Código de Cliente":
                             input_field = QComboBox()
                             self.populate_customer_combobox(input_field)

@@ -13,7 +13,7 @@ class LoginWindow(QMainWindow):
         super().__init__()
 
         self.setWindowTitle("FixedPC - Login")
-        self.setGeometry(100, 100, 400, 450)
+        self.setGeometry(100, 100, 320, 450)
 
         # Aplicar estilo oscuro
         self.setStyleSheet(qdarkstyle.load_stylesheet())
