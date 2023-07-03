@@ -6,7 +6,7 @@ class AgregarTicketServicio(Crear):
     def __init__(self):
         super().__init__()
         self.setFixedSize(350, 700)
-        self.title_label.setText("Crear Ticket")
+        self.title_label.setText("Crear Ticket de Servicio")
         self.table_name = 'ticketservicio'
         self.campos = ["Estado del Ticket", "Código de Cliente", "Código de Empleado", "Código de Servicio",
                        "Código de Facturación"]
@@ -27,11 +27,11 @@ class AgregarTicketServicio(Crear):
 class BorrarTicketServicio(Eliminar):
     def __init__(self):
         super().__init__()
-        self.set_title_text("Eliminar Ticket")
+        self.set_title_text("Eliminar Ticket de Servicio")
         self.table_name = "ticketservicio"
         self.table_widget.setColumnCount(6)
         self.layout.addWidget(self.table_widget)
-        self.headers = ["Código", "Estado", "Código de cliente", "Código de empleado", "Código de facturación",
+        self.headers = ["Código", "Estado del Ticket", "Código de Cliente", "Código de Empleado", "Código de Facturación",
                         "Código de Servicio"]
         self.columns = ["cod_ticket", "state_ticket", "cod_customer", "cod_emp", "cod_fact", "cod_serv"]
         self.table_widget.setHorizontalHeaderLabels(self.headers)
@@ -49,12 +49,12 @@ class BorrarTicketServicio(Eliminar):
 class ModificarTicketServicio(Actualizar):
     def __init__(self):
         super().__init__()
-        self.set_title_text("Actualizar Ticket")
+        self.set_title_text("Actualizar Ticket de Servicio")
         self.table_name = "ticketservicio"
         self.table_widget.setColumnCount(6)
         self.layout.addWidget(self.table_widget)
-        self.headers = ["Codigo", "Estado", "Código de cliente", "Código de empleado", "Código de facturación",
-                        "Código de servicio"]
+        self.headers = ["Codigo", "Estado del Ticket", "Código de Cliente", "Código de Empleado", "Código de Facturación",
+                        "Código de Servicio"]
         self.columns = ["cod_ticket", "state_ticket", "cod_customer", "cod_emp", "cod_fact", "cod_serv"]
         self.table_widget.setHorizontalHeaderLabels(self.headers)
         self.create_table()
@@ -72,10 +72,10 @@ class ConsultarTicketServicio(Buscar):
     def __init__(self):
         super().__init__()
         self.setFixedSize(300, 400)
-        self.set_title_text("Buscar Ticket")
+        self.set_title_text("Buscar Ticket de Servicio")
         self.table_name = "ticketservicio"
-        self.headers = ["Código", "Estado", "Código de cliente", "Código de Técnico asignado", "Código de facturación",
-                        "Código de servicio", "Código de repuesto"]
+        self.headers = ["Código", "Estado del Ticket", "Código de Cliente", "Código de Técnico Asignado", "Código de Facturación",
+                        "Código de Servicio", "Código de Repuesto"]
         self.columns = ["cod_ticket", "state_ticket", "cod_customer", "cod_emp", "cod_fact", "cod_serv"]
         self.columns_table = 6
         self.filter_combo.addItems(["Código", "Estado", "Técnico"])

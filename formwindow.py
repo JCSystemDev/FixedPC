@@ -1,3 +1,4 @@
+import datetime
 import hashlib
 import re
 from datetime import datetime
@@ -5,13 +6,12 @@ import os
 import qdarkstyle
 from PySide6.QtGui import QFont, QIcon, QPixmap
 from PySide6.QtWidgets import QDialog, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLineEdit, QMessageBox, \
-     QTableWidget, QTableWidgetItem, QAbstractItemView, QInputDialog, QComboBox
+    QTableWidget, QTableWidgetItem, QAbstractItemView, QComboBox, QDialogButtonBox
 from PySide6.QtCore import Qt
 from fpdf import FPDF
 
 import dao
 # import notifications
-
 
 class FormWindow(QDialog):
     def __init__(self):
@@ -41,6 +41,17 @@ class FormWindow(QDialog):
         self.pixmap = self.pixmap.scaled(128, 128, Qt.AspectRatioMode.KeepAspectRatio)
         self.image_label.setPixmap(self.pixmap)
 
+    def update_field_values(self):
+        self.field_values = [field.currentText() if isinstance(field, QComboBox) else field.text() for field in
+                             self.field_list]
+
+    def clear_fields(self):
+        for field in self.field_list:
+            if isinstance(field, QLineEdit):
+                field.clear()
+            elif isinstance(field, QComboBox):
+                field.setCurrentIndex(0)
+
     def create_table(self):
         # Obtener los datos de la tabla "finanza" usando el DAO
         columns = self.columns
@@ -58,23 +69,6 @@ class FormWindow(QDialog):
             for col_index, col_data in enumerate(row_data):
                 item = QTableWidgetItem(str(col_data))
                 self.table_widget.setItem(row_index, col_index, item)
-
-
-class Crear(FormWindow):
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle("Fixed PC - Agregar")
-        self.image_path = "img/agregar.png"
-        self.update_image()
-        self.campos_layout = QVBoxLayout()
-        self.layout.addLayout(self.campos_layout)
-        self.button_layout = QHBoxLayout()
-        self.agregar_button = QPushButton("Agregar")
-        self.agregar_button.clicked.connect(self.insert_row)
-        self.button_layout.addWidget(self.agregar_button)
-        self.layout.addLayout(self.button_layout)
-        self.field_values = []
-        self.autoincrement = False
 
     def create_fields(self, campos, layout):
         for campo in campos:
@@ -95,6 +89,9 @@ class Crear(FormWindow):
             elif campo == "Código de Repuesto":
                 field = QComboBox()
                 self.populate_repuesto_combobox(field)
+            elif campo == "Código de Facturación":
+                field = QComboBox()
+                self.populate_facturacion_combobox(field)
             else:
                 field = QLineEdit()
                 if campo == "Contraseña":
@@ -104,17 +101,6 @@ class Crear(FormWindow):
             self.field_list.append(field)
             if isinstance(field, QLineEdit):
                 field.textChanged.connect(self.update_field_values)
-
-    def update_field_values(self):
-        self.field_values = [field.currentText() if isinstance(field, QComboBox) else field.text() for field in
-                             self.field_list]
-
-    def clear_fields(self):
-        for field in self.field_list:
-            if isinstance(field, QLineEdit):
-                field.clear()
-            elif isinstance(field, QComboBox):
-                field.setCurrentIndex(0)
 
     def populate_customer_combobox(self, combobox):
         fdao = dao.DAO()
@@ -162,10 +148,45 @@ class Crear(FormWindow):
             name_rep = row[1]
             combobox.addItem(f"{cod_rep} - {name_rep}")
 
+    def populate_facturacion_combobox(self, combobox):
+        fdao = dao.DAO()
+        query = "SELECT cod_fact FROM factura"
+        result = fdao.mostrar(query)
+        fdao.cerrar_conexion()
+
+        for row in result:
+            cod_fact = row[0]
+            combobox.addItem(f"{cod_fact}")
+
+    def validar_fecha(self, fecha):
+        try:
+            fecha_actual = datetime.now().date()
+            fecha_ingresada = datetime.strptime(fecha, "%Y-%m-%d").date()
+            return fecha_ingresada <= fecha_actual
+        except ValueError:
+            return False
+
+
+class Crear(FormWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Fixed PC - Agregar")
+        self.image_path = "img/agregar.png"
+        self.update_image()
+        self.campos_layout = QVBoxLayout()
+        self.layout.addLayout(self.campos_layout)
+        self.button_layout = QHBoxLayout()
+        self.agregar_button = QPushButton("Agregar")
+        self.agregar_button.clicked.connect(self.insert_row)
+        self.button_layout.addWidget(self.agregar_button)
+        self.layout.addLayout(self.button_layout)
+        self.field_values = []
+        self.autoincrement = False
+
     def insert_row(self):
+        self.update_field_values()
         columns = self.columnas
         values = self.field_values
-        self.update_field_values()
 
         if columns[1] == "clave_user":
             values[1] = hashlib.sha256(values[1].encode('utf-8')).hexdigest()
@@ -198,6 +219,13 @@ class Crear(FormWindow):
                 QMessageBox.critical(self, "Error", "Fecha de contratación inválida.")
                 return
 
+        if "Teléfono" in columns:
+            telefono_index = columns.index("Teléfono")
+            telefono_value = values[telefono_index]
+            if not re.match(r"\+569\d{8}", telefono_value):
+                QMessageBox.critical(self, "Error", "Formato de teléfono inválido. Debe ser +569 seguido de 8 números.")
+                return
+
         # Validar que algunos campos solo contengan letras
         letras = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
         campos_letras = ["name_emp", "lastname_emp", "name_customer", "lastname_customer", "job_title", "rol",
@@ -222,14 +250,6 @@ class Crear(FormWindow):
             QMessageBox.information(self, "Éxito", "El Documento se ha agregado correctamente.")
         except Exception as e:
             QMessageBox.critical(self, "Error", f"No se pudo agregar el Documento.\nError: {str(e)}")
-
-    def validar_fecha(self, fecha):
-        try:
-            fecha_actual = datetime.now().date()
-            fecha_ingresada = datetime.strptime(fecha, "%Y-%m-%d").date()
-            return fecha_ingresada <= fecha_actual
-        except ValueError:
-            return False
 
 
 class Eliminar(FormWindow):
@@ -295,7 +315,7 @@ class Eliminar(FormWindow):
 class Actualizar(FormWindow):
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Fixed PC - Modificar")
+        self.setWindowTitle("Fixed PC - Actualizar")
         self.setFixedSize(550, 600)
         self.image_path = "img/modificar.png"
         self.update_image()
@@ -303,12 +323,15 @@ class Actualizar(FormWindow):
         self.columns = []
         self.table_widget = QTableWidget()
         self.table_widget.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.table_name = ""
+        self.nuevos_valores = {}
+        self.campos_layout = QVBoxLayout()
         self.codigo_label = QLabel()
         self.codigo_modificar = QLineEdit()
         self.modificar_button = QPushButton("Actualizar")
-        self.modificar_button.clicked.connect(self.update_row)
+        self.modificar_button.clicked.connect(self.show_update_form)
 
-    def update_row(self):
+    def show_update_form(self):
         codigo_modificar = self.codigo_modificar.text()
         columns = self.columns
         column_names = ', '.join(columns)
@@ -321,32 +344,83 @@ class Actualizar(FormWindow):
 
             if resultado:
                 # Mostrar mensaje de confirmación
-                reply = QMessageBox.question(self, "Confirmación", f"¿Deseas modificar el elemento {codigo_modificar}?",
+                reply = QMessageBox.question(self, "Confirmación",
+                                             f"¿Deseas modificar el elemento {codigo_modificar}?",
                                              QMessageBox.Yes | QMessageBox.No)
                 if reply == QMessageBox.Yes:
-                    fdao = dao.DAO()
                     column_values = {}
                     new_values = []
+
+                    # Crear y mostrar el formulario para ingresar los nuevos valores
+                    form = QDialog()
+                    form.setStyleSheet(qdarkstyle.load_stylesheet())
+                    form.setWindowIcon(QIcon("img/icon.ico"))
+                    form.setFixedSize(280, 400)
+                    form.setWindowTitle("Fixed PC - Actualización de Datos")
+                    form_layout = QVBoxLayout()
+                    form.setLayout(form_layout)
+
                     for header, column in zip(self.headers[1:], self.columns[1:]):
-                        new_value, ok = QInputDialog.getText(self, "Actualizar",
-                                                             f"Ingrese nuevo valor para '{header}':",
-                                                             QLineEdit.Normal, "")
-                        if ok:
-                            column_values[column] = new_value
-                            new_values.append(new_value)
+                        label = QLabel(header)
+                        input_field = None
+                        if header == "Estado del Ticket":
+                            input_field = QComboBox()
+                            input_field.addItems(self.ticket_state_list)
+                        elif header == "Código de Cliente":
+                            input_field = QComboBox()
+                            self.populate_customer_combobox(input_field)
+                        elif header == "Código de Empleado":
+                            input_field = QComboBox()
+                            self.populate_employee_combobox(input_field)
+                        elif header == "Código de Servicio":
+                            input_field = QComboBox()
+                            self.populate_service_combobox(input_field)
+                        elif header == "Código de Repuesto":
+                            input_field = QComboBox()
+                            self.populate_repuesto_combobox(input_field)
+                        elif header == "Código de Facturación":
+                            input_field = QComboBox()
+                            self.populate_facturacion_combobox(input_field)
+                        else:
+                            input_field = QLineEdit()
+                            if header == "Contraseña":
+                                input_field.setEchoMode(QLineEdit.Password)
+                        form_layout.addWidget(label)
+                        form_layout.addWidget(input_field)
+                        column_values[column] = input_field
+                        new_values.append(input_field)
 
-                    if column_values:  # Verificar si se han ingresado datos para actualizar
-                        update_columns = ", ".join(f"{column} = %s" for column in column_values.keys())
-                        query_actualizar = f"UPDATE {self.table_name} SET {update_columns} WHERE {self.columns[0]} = %s"
-                        new_values.append(codigo_modificar)
+                    button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+                    button_box.accepted.connect(form.accept)
+                    button_box.rejected.connect(form.reject)
+                    form_layout.addWidget(button_box)
 
-                        fdao.modificar(query_actualizar, new_values)
-                        fdao.cerrar_conexion()
-                    QMessageBox.information(self, "Éxito", "El elemento se ha actualizado correctamente.")
-                    self.create_table()
+                    if form.exec_() == QDialog.Accepted:
+                        # Obtener los nuevos valores ingresados en el formulario
+                        new_values = [
+                            column_values[column].currentText() if isinstance(column_values[column], QComboBox) else
+                            column_values[column].text() for column in column_values]
+                        if any(new_values):  # Verificar si se han ingresado datos para actualizar
+                            if self.columns[1] == "clave_user":
+                                pass
+                            fdao = dao.DAO()
+                            update_columns = ", ".join(f"{column} = %s" for column in column_values)
+                            query_actualizar = f"UPDATE {self.table_name} SET {update_columns} WHERE {self.columns[0]} = %s"
+                            new_values.append(codigo_modificar)
+                            fdao.modificar(query_actualizar, new_values)
+                            fdao.cerrar_conexion()
+                            QMessageBox.information(self, "Éxito", "El elemento se ha actualizado correctamente.")
+                            self.create_table()
+                        else:
+                            QMessageBox.information(self, "Confirmación",
+                                                    "No se realizaron cambios en los datos del elemento.")
+                    else:
+                        QMessageBox.information(self, "Confirmación",
+                                                "No se realizaron cambios en los datos del elemento.")
 
                 else:
-                    QMessageBox.information(self, "Confirmación", "No se realizaron cambios en los datos del elemento.")
+                    QMessageBox.information(self, "Confirmación",
+                                            "No se realizaron cambios en los datos del elemento.")
 
             else:
                 QMessageBox.warning(self, "Error", "Elemento no encontrado.")
@@ -357,11 +431,12 @@ class Actualizar(FormWindow):
         self.codigo_modificar.clear()
 
 
+
 class Buscar(FormWindow):
     def __init__(self):
         super().__init__()
         self.table_name = ""
-        self.setWindowTitle("Fixed PC - Consultar")
+        self.setWindowTitle("Fixed PC - Buscar")
         self.image_path = "img/buscar.png"
         self.update_image()
         # Create filter options
@@ -429,28 +504,24 @@ class Buscar(FormWindow):
         self.search_field.clear()
 
 
-class Reporte(FormWindow):
-    pass
-
-
 class Facturacion(QDialog):
     def __init__(self):
         super().__init__()
         self.setStyleSheet(qdarkstyle.load_stylesheet())
         self.setWindowIcon(QIcon("img/icon.ico"))
-        self.setWindowTitle("Crear Facturación")
+        self.setWindowTitle("Fixed PC - Crear Facturación")
 
         self.code_label = QLabel("Ingrese el código de facturación:")
         self.code_lineedit = QLineEdit()
-        self.create_button = QPushButton("Crear Facturación")
+        self.create_button = QPushButton("Crear Documento")
         self.total_neto = 0
+        self.code = 0
         self.code_customer = 0
         self.customer_name = ""
         self.phone_customer = ""
         self.replace_chars = "'(),"
         self.replace_table = str.maketrans("", "", self.replace_chars)
-        self.date_today = datetime.now()
-        self.date_today = self.date_today.strftime("%d-%m-%Y")
+        self.date_today = datetime.now().date()
         self.total_iva = 0
         self.create_button.clicked.connect(self.create_billing)
         layout = QVBoxLayout()
@@ -470,12 +541,12 @@ class Facturacion(QDialog):
         query_serv = f"SELECT s.cod_serv, s.name_serv, s.price_serv " \
                      "FROM ticketservicio ts " \
                      "JOIN servicio s ON ts.cod_serv = s.cod_serv " \
-                     "WHERE ts.cod_fact = {self.code} AND ts.state_ticket = 'cerrado' "
+                     f"WHERE ts.cod_fact = {self.code} AND ts.state_ticket = 'cerrado' "
         result_serv = fdao.mostrar(query_serv)
         query_rep = f"SELECT s.cod_rep, s.name_rep, s.price_rep " \
                     "FROM ticketrepuesto ts " \
                     "JOIN repuesto s ON ts.cod_rep = s.cod_rep " \
-                    "WHERE ts.cod_fact = {self.code} AND ts.state_ticket = 'cerrado' "
+                    f"WHERE ts.cod_fact = {self.code} AND ts.state_ticket = 'cerrado' "
         result_rep = fdao.mostrar(query_rep)
         query_customer = f"SELECT CONCAT(c.name_customer, ' ', c.lastname_customer) AS nombre_customer " \
                          f"FROM ticketservicio ts JOIN cliente c ON ts.cod_customer = c.cod_customer " \
@@ -490,7 +561,6 @@ class Facturacion(QDialog):
 
         self.phone_customer = str(result_phone[0])
         self.phone_customer = self.phone_customer.translate(self.replace_table)
-        print(self.phone_customer)
 
         fdao.cerrar_conexion()
 
@@ -553,12 +623,11 @@ class Facturacion(QDialog):
         pdf_path = os.path.join(pdf_directory, pdf_filename)
         os.makedirs(pdf_directory, exist_ok=True)
         pdf.output(pdf_path)
-
         fdao = dao.DAO()
-        query = f"INSERT INTO factura " \
-                f"(cod_fact, name_customer, valor_total_neto, valor_total_iva, valor_total, fecha_fact) " \
-                f"VALUES ({self.code}, '{self.customer_name}', {total_neto_serv + total_neto_rep}, {self.total_iva}, " \
-                f"{int(self.total_iva + total_neto_serv + total_neto_rep)}, '{datetime.now()}')"
+        query = f"UPDATE factura SET name_customer = '{self.customer_name}', " \
+                f"valor_total_neto = {total_neto_serv + total_neto_rep}, valor_total_iva = {self.total_iva}, " \
+                f"valor_total = {int(self.total_iva + total_neto_serv + total_neto_rep)}, " \
+                f"fecha_fact = '{self.date_today}' WHERE cod_fact = {self.code}"
         fdao.crear(query)
         fdao.cerrar_conexion()
         QMessageBox.information(self, "Información", f"Se ha creado el documento PDF: {pdf_filename}")
@@ -578,6 +647,7 @@ class Facturacion(QDialog):
                                                            f"${int(self.total_iva + total_neto_serv + total_neto_rep)}"
                                              , hora, minuto)
         """
+        self.code_lineedit.clear()
         
     def add_data_to_pdf(self, pdf, data_list):
         pdf.set_font(family="Arial", size=12)
@@ -586,7 +656,6 @@ class Facturacion(QDialog):
             item = data[0]
             desc = data[1]
             price = data[2]
-
             self.total_neto += int(price)
             pdf.cell(50, 10, item, border=1)
             pdf.cell(50, 10, desc, border=1)
@@ -596,3 +665,16 @@ class Facturacion(QDialog):
     def create_and_exec(self):
         form = Facturacion()
         form.exec_()
+
+
+class CrearFacturacion(FormWindow):
+    def __init__(self):
+        super().__init__()
+        daof = dao.DAO()
+        query = "INSERT INTO factura (cod_fact) VALUES (0)"
+        daof.crear(query)
+        query_codigo = "SELECT MAX(cod_fact) FROM factura"
+        result = daof.buscar(query_codigo)
+        print(result)
+        self.codigo_facturacion = result[0]
+        QMessageBox.information(self, "Información", f"Se ha creado la facturación {self.codigo_facturacion}")

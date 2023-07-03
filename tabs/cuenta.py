@@ -8,7 +8,7 @@ class AgregarCuenta(Crear):
         self.setFixedSize(350, 700)
         self.title_label.setText("Crear Cuenta")
         self.table_name = 'cuenta'
-        self.campos = ["Nombre de usuario", "Contraseña", "Rol", "Código de empleado"]
+        self.campos = ["Nombre de usuario", "Contraseña", "Rol", "Código de Empleado"]
         self.columnas = ["cod_user", "clave_user", "rol", "cod_emp"]
         self.field_list = []
         self.create_fields(self.campos, self.campos_layout)
@@ -50,7 +50,7 @@ class ModificarCuenta(Actualizar):
         self.table_name = "cuenta"
         self.table_widget.setColumnCount(4)
         self.layout.addWidget(self.table_widget)
-        self.headers = ["Codigo", "Contraseña", "Rol", "Código de empleado"]
+        self.headers = ["Codigo", "Contraseña", "Rol", "Código de Empleado"]
         self.columns = ["cod_user", "clave_user", "rol", "cod_emp"]
         self.table_widget.setHorizontalHeaderLabels(self.headers)
         self.create_table()
@@ -70,7 +70,7 @@ class ConsultarCuenta(Buscar):
         self.setFixedSize(300, 400)
         self.set_title_text("Buscar Cuenta")
         self.table_name = "cuenta"
-        self.headers = ["Nombre de Usuario", "Contraseña", "Rol", "Código de empleado"]
+        self.headers = ["Nombre de Usuario", "Contraseña", "Rol", "Código de Empleado"]
         self.columns = ["cod_user", "clave_user", "rol", "cod_emp"]
         self.columns_table = 4
         self.filter_combo.addItems(["Usuario", "Rol", "Empleado"])

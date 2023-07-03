@@ -5,9 +5,33 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="95b9d165-41ef-4ac6-8b92-368a2f62ad67" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/img/icon.ico.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/2172ca9e-6303-4ecd-bcf0-db3980439d61.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/2172ca9e-6303-4ecd-bcf0-db3980439d61.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/facturaciones/20230001.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/facturaciones/20230002.pdf" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/formwindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/formwindow.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tabs/empleado.py" beforeDir="false" afterPath="$PROJECT_DIR$/tabs/empleado.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/agregar.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/agregar.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/borrar.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/borrar.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/buscar.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/buscar.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/cliente.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/cliente.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/detalle.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/detalle.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/empleado.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/empleado.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/finanza.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/finanza.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/icon.ico" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/login.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/login.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/modificar.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/modificar.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/reporte.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/reporte.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/repuesto.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/repuesto.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/servicio.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/servicio.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/ticket.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/ticket.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/img/usuario.png" beforeDir="false" afterPath="$PROJECT_DIR$/img/usuario.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/loginwindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/loginwindow.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mainwindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/mainwindow.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tabs/cuenta.py" beforeDir="false" afterPath="$PROJECT_DIR$/tabs/cuenta.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tabs/reporte.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/tabs/ticketrepuesto.py" beforeDir="false" afterPath="$PROJECT_DIR$/tabs/ticketrepuesto.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tabs/ticketservicio.py" beforeDir="false" afterPath="$PROJECT_DIR$/tabs/ticketservicio.py" afterDir="false" />
     </list>
@@ -137,7 +161,9 @@
       <workItem from="1688043033375" duration="32340000" />
       <workItem from="1688132850735" duration="21506000" />
       <workItem from="1688163085739" duration="9534000" />
-      <workItem from="1688223333458" duration="14261000" />
+      <workItem from="1688223333458" duration="14739000" />
+      <workItem from="1688270838523" duration="1627000" />
+      <workItem from="1688304611889" duration="39710000" />
     </task>
     <servers />
   </component>
@@ -152,7 +178,7 @@
     <SUITE FILE_PATH="coverage/TDA$main.coverage" NAME="fixedpc Coverage Results" MODIFIED="1687578754488" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/TDA$mainwindow.coverage" NAME="mainwindow Coverage Results" MODIFIED="1687740458924" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/FixedPC$formwindow.coverage" NAME="formwindow Coverage Results" MODIFIED="1688161485080" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/FixedPC$fixedpc.coverage" NAME="fixedpc Coverage Results" MODIFIED="1688269859680" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/FixedPC$fixedpc.coverage" NAME="fixedpc Coverage Results" MODIFIED="1688355454434" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/TDA$smtp.coverage" NAME="smtp Coverage Results" MODIFIED="1687729871922" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/TDA$notifications.coverage" NAME="notifications Coverage Results" MODIFIED="1687738280144" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/TDA$formwindow.coverage" NAME="formwindow Coverage Results" MODIFIED="1687573327067" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

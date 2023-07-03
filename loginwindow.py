@@ -12,7 +12,7 @@ class LoginWindow(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("Login - FixedPC")
+        self.setWindowTitle("FixedPC - Login")
         self.setGeometry(100, 100, 400, 450)
 
         # Aplicar estilo oscuro
@@ -61,7 +61,7 @@ class LoginWindow(QMainWindow):
         password = self.lineedit_password.text()
         password = hashlib.sha256(password.encode('utf-8')).hexdigest()
 
-        # Aquí puedes implementar la lógica para verificar el usuario y contraseña en tu base de datos
+        # Lógica para verificar el usuario y contraseña en tu base de datos
         # o sistema de autenticación
         try:
             daologin = dao.DAO()

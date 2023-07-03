@@ -5,14 +5,14 @@ from PySide6.QtWidgets import QMainWindow, QTabWidget, QHBoxLayout, QWidget, QPu
     QMessageBox
 
 import formwindow
-from tabs import ticketservicio, servicio, reporte, repuesto, cuenta, cliente, empleado, ticketrepuesto
+from tabs import ticketservicio, servicio, repuesto, cuenta, cliente, empleado, ticketrepuesto
 
 
 class MainWindow(QMainWindow):
     def __init__(self, username, role):
         super().__init__()
 
-        self.setWindowTitle("Main - Fixed PC")
+        self.setWindowTitle("Fixed PC - Main")
         self.setFixedSize(1024, 640)
         self.closed = Signal()
 
@@ -136,13 +136,10 @@ class MainWindow(QMainWindow):
                              empleado.ModificarEmpleado.create_and_exec,
                              empleado.ConsultarEmpleado.create_and_exec])
 
-            self.create_tab(4, ["Facturación", "Clientes", "Ventas",
-                                "Servicios/Repuestos"],
-                            "Reporte", "img/reporte.png", "Gestión de Reportes",
-                            [formwindow.Facturacion.create_and_exec,
-                             reporte.ReporteCliente.create_and_exec,
-                             reporte.ReporteVenta.create_and_exec,
-                             reporte.ReporteServicioRepuesto.create_and_exec])
+            self.create_tab(4, ["Crear código de facturación", "Crear documento de facturación"],
+                            "Facturación", "img/reporte.png", "Gestión de Facturación",
+                            [formwindow.CrearFacturacion,
+                             formwindow.Facturacion.create_and_exec])
 
         elif role == "administrativo":
 
