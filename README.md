@@ -24,9 +24,3 @@
 * Python
 * MySQL
 * Qt(Pyside6)
-
-### Equipo de desarrollo
-* Diego Cornejo (Base de datos)
-* Danilo Garrido (Documentación)
-* Juan Carlos Gallardo (Programador)
-* Angelo Marchant (Pruebas)
