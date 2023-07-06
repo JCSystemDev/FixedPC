@@ -6,7 +6,7 @@ import os
 import qdarkstyle
 from PySide6.QtGui import QFont, QIcon, QPixmap
 from PySide6.QtWidgets import QDialog, QLabel, QVBoxLayout, QHBoxLayout, QPushButton, QWidget, QLineEdit, QMessageBox, \
-    QTableWidget, QTableWidgetItem, QAbstractItemView, QComboBox, QDialogButtonBox
+    QTableWidget, QTableWidgetItem, QAbstractItemView, QComboBox, QDialogButtonBox, QDateTimeEdit
 from PySide6.QtCore import Qt
 from fpdf import FPDF
 
@@ -291,6 +291,132 @@ class Crear(FormWindow):
             QMessageBox.critical(self, "Error", f"No se pudo agregar el Documento.\nError: {str(e)}")
 
 
+class Actualizar(FormWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Fixed PC - Actualizar")
+        self.setFixedSize(550, 600)
+        self.image_path = "img/modificar.png"
+        self.update_image()
+        self.headers = []
+        self.columns = []
+        self.table_widget = QTableWidget()
+        self.table_widget.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self.table_name = ""
+        self.nuevos_valores = {}
+        self.campos_layout = QVBoxLayout()
+        self.codigo_label = QLabel()
+        self.codigo_modificar = QLineEdit()
+        self.modificar_button = QPushButton("Actualizar")
+        self.modificar_button.clicked.connect(self.show_update_form)
+
+    def show_update_form(self):
+        codigo_modificar = self.codigo_modificar.text()
+        columns = self.columns
+        column_names = ', '.join(columns)
+
+        if codigo_modificar:
+            fdao = dao.DAO()
+            query_buscar = f"SELECT {column_names} FROM {self.table_name} WHERE {columns[0]} = '{codigo_modificar}'"
+            resultado = fdao.buscar(query_buscar)
+            fdao.cerrar_conexion()
+
+            if resultado:
+                # Mostrar mensaje de confirmación
+                reply = QMessageBox.question(self, "Confirmación",
+                                             f"¿Deseas modificar el elemento {codigo_modificar}?",
+                                             QMessageBox.Yes | QMessageBox.No)
+                if reply == QMessageBox.Yes:
+                    column_values = {}
+                    new_values = []
+
+                    # Obtener los valores del resultado como un diccionario
+                    resultado_dict = dict(zip(columns, resultado))
+
+                    # Crear y mostrar el formulario para ingresar los nuevos valores
+                    form = QDialog()
+                    form.setStyleSheet(qdarkstyle.load_stylesheet())
+                    form.setWindowIcon(QIcon("img/icon.ico"))
+                    form.setFixedSize(280, 400)
+                    form.setWindowTitle("Fixed PC - Actualización de Datos")
+                    form_layout = QVBoxLayout()
+                    form.setLayout(form_layout)
+
+                    for header, column in zip(self.headers[1:], self.columns[1:]):
+                        label = QLabel(header)
+                        input_field = None
+                        if header == "Estado del Ticket":
+                            input_field = QComboBox()
+                            input_field.addItems(self.ticket_state_list)
+                            if column in resultado_dict:
+                                value = str(resultado_dict[column])
+                                index = input_field.findText(value)
+                                if index != -1:
+                                    input_field.setCurrentIndex(index)
+                                    
+                        elif header == "Contraseña":
+                            input_field = QLineEdit()
+                            input_field.setEchoMode(QLineEdit.Password)
+                            if column in resultado_dict:
+                                input_field.setText(str(resultado_dict[column]))
+                        else:
+                            input_field = QLineEdit()
+                            if column in resultado_dict:
+                                input_field.setText(str(resultado_dict[column]))
+
+                        form_layout.addWidget(label)
+                        form_layout.addWidget(input_field)
+                        column_values[column] = input_field
+                        new_values.append(input_field)
+
+                    button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+                    button_box.accepted.connect(form.accept)
+                    button_box.rejected.connect(form.reject)
+                    form_layout.addWidget(button_box)
+                    if form.exec_() == QDialog.Accepted:
+                        # Obtener los nuevos valores ingresados en el formulario
+                        new_values = [
+                            column_values[column].currentText() if isinstance(column_values[column], QComboBox) else
+                            column_values[column].text() for column in self.columns[1:]
+                        ]
+
+                        if any(new_values):  # Verificar si se han ingresado datos para actualizar
+                            fdao = dao.DAO()
+                            update_columns = ", ".join(f"{column} = %s" for column in self.columns[1:])
+                            query_actualizar = f"UPDATE {self.table_name} SET {update_columns} " \
+                                               f"WHERE {self.columns[0]} = %s"
+                            new_values.append(codigo_modificar)
+                            if 'clave_user' in column_values:
+                                password = column_values['clave_user'].text()
+                                if password:
+                                    hashed_password = hashlib.sha256(password.encode()).hexdigest()
+                                    new_values[self.columns.index('clave_user') - 1] = hashed_password
+                            print(new_values)
+
+                            fdao.modificar(query_actualizar, new_values)
+                            fdao.cerrar_conexion()
+                            QMessageBox.information(self, "Éxito", "El elemento se ha actualizado correctamente.")
+                            self.create_table()
+                        else:
+                            QMessageBox.information(self, "Confirmación",
+                                                    "No se realizaron cambios en los datos del elemento.")
+                    else:
+                        QMessageBox.information(self, "Confirmación",
+                                                "No se realizaron cambios en los datos del elemento.")
+
+                else:
+                    QMessageBox.information(self, "Confirmación",
+                                            "No se realizaron cambios en los datos del elemento.")
+
+            else:
+                QMessageBox.warning(self, "Error", "Elemento no encontrado.")
+
+        else:
+            QMessageBox.warning(self, "Error", "Ingrese un código válido.")
+
+        self.codigo_modificar.clear()
+
+
 class Eliminar(FormWindow):
     def __init__(self):
         super().__init__()
@@ -349,129 +475,6 @@ class Eliminar(FormWindow):
         else:
             QMessageBox.warning(self, "Error", "Ingrese un código válido.")
         self.codigo_borrar.clear()
-
-
-class Actualizar(FormWindow):
-    def __init__(self):
-        super().__init__()
-        self.setWindowTitle("Fixed PC - Actualizar")
-        self.setFixedSize(550, 600)
-        self.image_path = "img/modificar.png"
-        self.update_image()
-        self.headers = []
-        self.columns = []
-        self.table_widget = QTableWidget()
-        self.table_widget.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.table_name = ""
-        self.nuevos_valores = {}
-        self.campos_layout = QVBoxLayout()
-        self.codigo_label = QLabel()
-        self.codigo_modificar = QLineEdit()
-        self.modificar_button = QPushButton("Actualizar")
-        self.modificar_button.clicked.connect(self.show_update_form)
-
-    def show_update_form(self):
-        codigo_modificar = self.codigo_modificar.text()
-        columns = self.columns
-        column_names = ', '.join(columns)
-
-        if codigo_modificar:
-            fdao = dao.DAO()
-            query_buscar = f"SELECT {column_names} FROM {self.table_name} WHERE {columns[0]} = '{codigo_modificar}'"
-            resultado = fdao.buscar(query_buscar)
-            fdao.cerrar_conexion()
-
-            if resultado:
-                # Mostrar mensaje de confirmación
-                reply = QMessageBox.question(self, "Confirmación",
-                                             f"¿Deseas modificar el elemento {codigo_modificar}?",
-                                             QMessageBox.Yes | QMessageBox.No)
-                if reply == QMessageBox.Yes:
-                    column_values = {}
-                    new_values = []
-
-                    # Crear y mostrar el formulario para ingresar los nuevos valores
-                    form = QDialog()
-                    form.setStyleSheet(qdarkstyle.load_stylesheet())
-                    form.setWindowIcon(QIcon("img/icon.ico"))
-                    form.setFixedSize(280, 400)
-                    form.setWindowTitle("Fixed PC - Actualización de Datos")
-                    form_layout = QVBoxLayout()
-                    form.setLayout(form_layout)
-
-                    for header, column in zip(self.headers[1:], self.columns[1:]):
-                        label = QLabel(header)
-                        input_field = None
-                        if header == "Estado del Ticket":
-                            input_field = QComboBox()
-                            input_field.addItems(self.ticket_state_list)
-                        elif header == "Rol":
-                            input_field = QComboBox()
-                            input_field.addItems(self.role_list)
-                        elif header == "Código de Cliente":
-                            input_field = QComboBox()
-                            self.populate_customer_combobox(input_field)
-                        elif header == "Código de Empleado":
-                            input_field = QComboBox()
-                            self.populate_employee_combobox(input_field)
-                        elif header == "Código de Técnico":
-                            input_field = QComboBox()
-                            self.populate_tecnico_combobox(input_field)
-                        elif header == "Código de Servicio":
-                            input_field = QComboBox()
-                            self.populate_service_combobox(input_field)
-                        elif header == "Código de Repuesto":
-                            input_field = QComboBox()
-                            self.populate_repuesto_combobox(input_field)
-                        elif header == "Código de Facturación":
-                            input_field = QComboBox()
-                            self.populate_facturacion_combobox(input_field)
-                        else:
-                            input_field = QLineEdit()
-
-                            if header == "Contraseña":
-                                input_field.setEchoMode(QLineEdit.Password)
-                        form_layout.addWidget(label)
-                        form_layout.addWidget(input_field)
-                        column_values[column] = input_field
-                        new_values.append(input_field)
-                    button_box = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
-                    button_box.accepted.connect(form.accept)
-                    button_box.rejected.connect(form.reject)
-                    form_layout.addWidget(button_box)
-                    if form.exec_() == QDialog.Accepted:
-                        # Obtener los nuevos valores ingresados en el formulario
-                        new_values = [
-                            column_values[column].currentText() if isinstance(column_values[column], QComboBox) else
-                            column_values[column].text() for column in column_values]
-                        if any(new_values):  # Verificar si se han ingresado datos para actualizar
-                            fdao = dao.DAO()
-                            update_columns = ", ".join(f"{column} = %s" for column in column_values)
-                            query_actualizar = f"UPDATE {self.table_name} SET {update_columns} " \
-                                               f"WHERE {self.columns[0]} = %s"
-                            new_values.append(codigo_modificar)
-                            fdao.modificar(query_actualizar, new_values)
-                            fdao.cerrar_conexion()
-                            QMessageBox.information(self, "Éxito", "El elemento se ha actualizado correctamente.")
-                            self.create_table()
-                        else:
-                            QMessageBox.information(self, "Confirmación",
-                                                    "No se realizaron cambios en los datos del elemento.")
-                    else:
-                        QMessageBox.information(self, "Confirmación",
-                                                "No se realizaron cambios en los datos del elemento.")
-
-                else:
-                    QMessageBox.information(self, "Confirmación",
-                                            "No se realizaron cambios en los datos del elemento.")
-
-            else:
-                QMessageBox.warning(self, "Error", "Elemento no encontrado.")
-
-        else:
-            QMessageBox.warning(self, "Error", "Ingrese un código válido.")
-
-        self.codigo_modificar.clear()
 
 
 class Buscar(FormWindow):
@@ -673,22 +676,6 @@ class Facturacion(QDialog):
         fdao.crear(query)
         fdao.cerrar_conexion()
         QMessageBox.information(self, "Información", f"Se ha creado el documento PDF: {pdf_filename}")
-
-        """
-        hora_actual = datetime.now()
-        hora = hora_actual.hour
-        minuto = hora_actual.minute + 1
-        print(hora, minuto)
-
-        # Enviar el mensaje 1 minuto después de la hora actual (Por ahora no se usará)
-        
-        notifications.enviar_mensaje_despues(self.phone_customer, f"Hola {self.customer_name},"
-                                                           f" su pedido esta listo para retiro." \
-                                                           f" Su número de facturación es {self.code}"
-                                                           f" y el valor total es por " \
-                                                           f"${int(self.total_iva + total_neto_serv + total_neto_rep)}"
-                                             , hora, minuto)
-        """
         self.code_lineedit.clear()
         
     def add_data_to_pdf(self, pdf, data_list):

@@ -1,6 +1,7 @@
 import mysql.connector
 
-# clase DAO encargada como capa intermedia entre la aplicacion y la bd, llama a las funciones para abrir y cerrar la bd, como tambien el CRUD de los módulos
+# clase DAO encargada como capa intermedia entre la aplicacion y la bd,
+# llama a las funciones para abrir y cerrar la bd, como tambien el CRUD de los módulos
 class DAO:
     def __init__(self):
         self.cnx = mysql.connector.connect(user='root', password='', host='localhost', database='fixedpc')
