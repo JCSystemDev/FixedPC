@@ -17,8 +17,7 @@
 * Facturaciones
 
 ### Base de datos
-* Tipo de base de datos
-* Modelo de base de datos
+* SQL (Relacional)
 
 ### Plataformas utilizadas 
 * Python
