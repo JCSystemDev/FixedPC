@@ -1,4 +1,5 @@
-## Sistema de gestión Fixed PC
+# Fixed PC
+## Sistema de gestión para empresa que hace reparaciones de equipos de escritorio 
 
 ### Tipos de usuario y Roles
 * Administrador del sistema
