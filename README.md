@@ -23,8 +23,7 @@
   * empleado (Todos los empleados que han sido ingresados en el sistema)
   * cuenta (Todas las cuentas de usuario del sistema)
   * factura (Tdoas las facturaciones creadas en el sistema)
-  * ticketservicio (Todos los tickets de servicio generados en el sistema)
-  * ticketrepuesto (Todos los tickets de repuesto generados en el sistema)
+  * ticket (Todos los tickets de servicio generados en el sistema)
   * repuesto (Todos los repuestos ingresados en el sistema)
   * servicio (Todos los servicios ingresados en el sistema)
 
